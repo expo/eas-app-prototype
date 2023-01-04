@@ -1,0 +1,24 @@
+fragment CurrentUserData on User {
+  id
+  username
+  firstName
+  profilePhoto
+  accounts {
+    id
+    name
+    owner {
+      id
+      username
+      profilePhoto
+      firstName
+      fullName
+      lastName
+    }
+  }
+}
+
+query GetCurrentUser {
+  viewer {
+    ...CurrentUserData
+  }
+}

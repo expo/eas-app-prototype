@@ -1,16 +1,30 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { useGetCurrentUserQuery } from "../generated/graphql";
 
-export default function Builds({ navigation }) {
+const Builds = () => {
+  const { data } = useGetCurrentUserQuery({
+    fetchPolicy: "cache-and-network",
+  });
+
   return (
-    <View>
-      <Text
-        onPress={() => {
-          // Go back to the previous screen using the imperative API.
-          navigation.goBack();
-        }}
-      >
-        Builds list
-      </Text>
+    <View style={styles.container}>
+      {data ? (
+        <Text
+          style={styles.title}
+        >{`Welcome ${data?.viewer?.firstName},`}</Text>
+      ) : null}
     </View>
   );
-}
+};
+
+export default Builds;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 15,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: "700",
+  },
+});
