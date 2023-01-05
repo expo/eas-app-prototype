@@ -1,12 +1,21 @@
+fragment BuildForUseDownloadBuild on Build {
+  id
+  platform
+  artifacts {
+    buildUrl
+  }
+  project {
+    id
+  }
+}
+
 fragment BuildForBuildsListItem on Build {
   id
+  ...BuildForUseDownloadBuild
   activityTimestamp
   platform
   distribution
   status
-  artifacts {
-    buildUrl
-  }
 }
 
 query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {

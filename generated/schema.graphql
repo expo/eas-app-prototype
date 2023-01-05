@@ -510,9 +510,6 @@ interface Actor {
 
   """"""
   isExpoAdmin: Boolean!
-
-  """If actor is a user, the profile photo URL."""
-  profilePhoto: String
 }
 
 """"""
@@ -4576,11 +4573,6 @@ type Robot implements Actor {
 
   """"""
   isExpoAdmin: Boolean!
-
-  """
-  Robots don't have profile photos (but actor interface expects this field).
-  """
-  profilePhoto: String
 }
 
 """"""

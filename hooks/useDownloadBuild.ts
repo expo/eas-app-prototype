@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Platform } from "react-native";
+import { Linking, Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
 import { startActivityAsync } from "expo-intent-launcher";
+import { BuildForUseDownloadBuildFragment } from "../generated/graphql";
 
 export enum DownloadStatus {
   COMPLETED = "completed",
@@ -11,13 +12,14 @@ export enum DownloadStatus {
 }
 
 interface UseDownloadBuildParams {
-  buildUrl: string;
+  build: BuildForUseDownloadBuildFragment;
 }
 
-export const useDownloadBuild = ({ buildUrl }: UseDownloadBuildParams) => {
+export const useDownloadBuild = ({ build }: UseDownloadBuildParams) => {
   const [localUri, setLocalUri] = useState<string>(undefined);
   const [progress, setProgress] = useState<number>();
   const [status, setStatus] = useState<DownloadStatus>();
+  const buildUrl = build?.artifacts?.buildUrl;
   const buildName = buildUrl?.substring(buildUrl?.lastIndexOf("/") + 1);
 
   const downloadResumable = FileSystem.createDownloadResumable(
@@ -26,13 +28,21 @@ export const useDownloadBuild = ({ buildUrl }: UseDownloadBuildParams) => {
     {},
     (downloadProgress) => {
       const progress =
-        downloadProgress.totalBytesWritten /
+        (downloadProgress.totalBytesWritten * 100) /
         downloadProgress.totalBytesExpectedToWrite;
+
       setProgress(progress);
     }
   );
 
   const downloadBuild = async () => {
+    if (Platform.OS === "ios") {
+      Linking.openURL(
+        `itms-services://?action=download-manifest;url=https://api.expo.dev/v2/projects/${build?.project?.id}/builds/${build?.id}/manifest.plist`
+      );
+      return;
+    }
+
     let buildUri = localUri;
 
     if (!buildUri) {
@@ -55,7 +65,7 @@ export const useDownloadBuild = ({ buildUrl }: UseDownloadBuildParams) => {
       }
     }
 
-    return installBuild(localUri);
+    return installAndroidBuild(localUri);
   };
 
   const pauseDownload = async () => {
@@ -75,7 +85,7 @@ export const useDownloadBuild = ({ buildUrl }: UseDownloadBuildParams) => {
   };
 };
 
-const installBuild = async (uri: string) => {
+const installAndroidBuild = async (uri: string) => {
   if (Platform.OS === "android") {
     const cUri = await FileSystem.getContentUriAsync(uri);
 

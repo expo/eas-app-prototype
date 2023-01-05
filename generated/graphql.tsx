@@ -548,8 +548,6 @@ export type Actor = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isExpoAdmin: Scalars['Boolean'];
-  /** If actor is a user, the profile photo URL. */
-  profilePhoto?: Maybe<Scalars['String']>;
 };
 
 
@@ -3522,8 +3520,6 @@ export type Robot = Actor & {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isExpoAdmin: Scalars['Boolean'];
-  /** Robots don't have profile photos (but actor interface expects this field). */
-  profilePhoto?: Maybe<Scalars['String']>;
 };
 
 
@@ -4734,7 +4730,9 @@ export type DeleteApplePushKeyResult = {
   id: Scalars['ID'];
 };
 
-export type BuildForBuildsListItemFragment = { __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null };
+export type BuildForUseDownloadBuildFragment = { __typename?: 'Build', id: string, platform: AppPlatform, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null, project: { __typename?: 'App', id: string } | { __typename?: 'Snack', id: string } };
+
+export type BuildForBuildsListItemFragment = { __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null, project: { __typename?: 'App', id: string } | { __typename?: 'Snack', id: string } };
 
 export type GetAppBuildsQueryVariables = Exact<{
   appId: Scalars['String'];
@@ -4743,7 +4741,7 @@ export type GetAppBuildsQueryVariables = Exact<{
 }>;
 
 
-export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
+export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null, project: { __typename?: 'App', id: string } | { __typename?: 'Snack', id: string } }> } } };
 
 export type AccountFragment = { __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null };
 
@@ -4763,18 +4761,28 @@ export type GetAccountAppsQueryVariables = Exact<{
 
 export type GetAccountAppsQuery = { __typename?: 'RootQuery', account: { __typename?: 'AccountQuery', byId: { __typename?: 'Account', id: string, name: string, apps: Array<{ __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null }> } } };
 
+export const BuildForUseDownloadBuildFragmentDoc = gql`
+    fragment BuildForUseDownloadBuild on Build {
+  id
+  platform
+  artifacts {
+    buildUrl
+  }
+  project {
+    id
+  }
+}
+    `;
 export const BuildForBuildsListItemFragmentDoc = gql`
     fragment BuildForBuildsListItem on Build {
   id
+  ...BuildForUseDownloadBuild
   activityTimestamp
   platform
   distribution
   status
-  artifacts {
-    buildUrl
-  }
 }
-    `;
+    ${BuildForUseDownloadBuildFragmentDoc}`;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
   id

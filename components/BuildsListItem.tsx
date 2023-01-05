@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Platform, Text } from "react-native";
+import { Text } from "react-native";
 
 import { BuildForBuildsListItemFragment } from "../generated/graphql";
 import ListItem from "./ListItem";
@@ -11,7 +10,7 @@ interface Props {
 
 const BuildsListItem = ({ build }: Props) => {
   const { downloadBuild, pauseDownload, progress, status } = useDownloadBuild({
-    buildUrl: build?.artifacts?.buildUrl,
+    build,
   });
 
   return (
@@ -26,7 +25,9 @@ const BuildsListItem = ({ build }: Props) => {
         {build.platform} {build.distribution} build
       </Text>
       <Text>
-        {build.activityTimestamp} - {status} - {progress * 100}%
+        {`${build.activityTimestamp} ${status ? "- " + status : ""} ${
+          progress ? "- " + progress.toFixed(2) + "%" : ""
+        }`}
       </Text>
     </ListItem>
   );
