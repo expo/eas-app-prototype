@@ -6,9 +6,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { Stack } from "expo-router";
+import { useEffect } from "react";
+import { spacing } from "@expo/styleguide-native";
+import * as Device from "expo-device";
 
 import { useGetAppBuildsQuery } from "../../generated/graphql";
-import ListItem from "../../components/ListItem";
+import BuildsListItem from "../../components/BuildsListItem";
 
 const Project = ({ route }) => {
   const { id } = route.params;
@@ -20,6 +23,13 @@ const Project = ({ route }) => {
   const app = data?.app?.byId;
   const builds = app?.builds;
 
+  useEffect(() => {
+    Device.isSideLoadingEnabledAsync().then((value) => {
+      // TODO: If not enabled show "Install unknown apps" permission
+      console.log("Is side loading enabled? ", value);
+    });
+  }, []);
+
   return (
     <View style={styles.flex}>
       <Stack.Screen options={{ title: app?.name || "" }} />
@@ -27,11 +37,8 @@ const Project = ({ route }) => {
       {data ? (
         <FlatList
           data={builds}
-          renderItem={({ item }) => (
-            <ListItem>
-              <Text>{item.id}</Text>
-            </ListItem>
-          )}
+          contentContainerStyle={styles.contentContainer}
+          renderItem={({ item }) => <BuildsListItem build={item} />}
         />
       ) : (
         <ActivityIndicator size="small" />
@@ -45,5 +52,8 @@ export default Project;
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
+  },
+  contentContainer: {
+    paddingHorizontal: spacing[1],
   },
 });

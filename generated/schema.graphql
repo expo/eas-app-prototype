@@ -244,6 +244,21 @@ type AccountMutation {
 }
 
 """"""
+input AccountNotificationSubscriptionInput {
+  """"""
+  accountId: ID!
+
+  """"""
+  event: NotificationEvent!
+
+  """"""
+  type: NotificationType!
+
+  """"""
+  userId: ID!
+}
+
+""""""
 type AccountQuery {
   """Query an Account by ID"""
   byId(
@@ -495,6 +510,9 @@ interface Actor {
 
   """"""
   isExpoAdmin: Boolean!
+
+  """If actor is a user, the profile photo URL."""
+  profilePhoto: String
 }
 
 """"""
@@ -1303,6 +1321,21 @@ type AppMutation {
 
   """Require api token to send push notifs for experience"""
   setPushSecurityEnabled(appId: ID!, pushSecurityEnabled: Boolean!): App!
+}
+
+""""""
+input AppNotificationSubscriptionInput {
+  """"""
+  appId: ID!
+
+  """"""
+  event: NotificationEvent!
+
+  """"""
+  type: NotificationType!
+
+  """"""
+  userId: ID!
 }
 
 """"""
@@ -4198,6 +4231,72 @@ type MeteredBillingStatus {
 }
 
 """"""
+enum NotificationEvent {
+  """"""
+  BUILD_COMPLETE
+
+  """"""
+  SUBMISSION_COMPLETE
+}
+
+""""""
+type NotificationSubscription {
+  """"""
+  account: Account
+
+  """"""
+  actor: Actor
+
+  """"""
+  app: App
+
+  """"""
+  createdAt: DateTime!
+
+  """"""
+  event: NotificationEvent!
+
+  """"""
+  id: ID!
+
+  """"""
+  type: NotificationType!
+}
+
+""""""
+input NotificationSubscriptionFilter {
+  """"""
+  accountId: ID
+
+  """"""
+  appId: ID
+
+  """"""
+  event: NotificationEvent
+
+  """"""
+  type: NotificationType
+}
+
+""""""
+type NotificationSubscriptionMutation {
+  """"""
+  subscribeToEventForAccount(input: AccountNotificationSubscriptionInput!): SubscribeToNotificationResult!
+
+  """"""
+  subscribeToEventForApp(input: AppNotificationSubscriptionInput!): SubscribeToNotificationResult!
+
+  """"""
+  unsubscribe(id: ID!): UnsubscribeFromNotificationResult!
+}
+
+""""""
+enum NotificationType {
+  """"""
+  EMAIL
+}
+
+""""""
 type Offer {
   """"""
   features: [Feature]
@@ -4477,6 +4576,11 @@ type Robot implements Actor {
 
   """"""
   isExpoAdmin: Boolean!
+
+  """
+  Robots don't have profile photos (but actor interface expects this field).
+  """
+  profilePhoto: String
 }
 
 """"""
@@ -4617,6 +4721,9 @@ type RootMutation {
 
   """Mutations that modify the currently authenticated User"""
   me: MeMutation!
+
+  """Mutations that modify a NotificationSubscription"""
+  notificationSubscription: NotificationSubscriptionMutation!
 
   """Mutations that create, update, and delete Robots"""
   robot: RobotMutation!
@@ -5296,6 +5403,12 @@ enum SubmissionStatus {
 }
 
 """"""
+type SubscribeToNotificationResult {
+  """"""
+  notificationSubscription: NotificationSubscription!
+}
+
+""""""
 type SubscriptionDetails {
   """"""
   addons: [AddonDetails!]!
@@ -5347,6 +5460,12 @@ type SubscriptionDetails {
 
   """"""
   willCancel: Boolean
+}
+
+""""""
+type UnsubscribeFromNotificationResult {
+  """"""
+  notificationSubscription: NotificationSubscription!
 }
 
 """"""
@@ -5711,6 +5830,9 @@ type User implements Actor {
 
   """"""
   location: String
+
+  """"""
+  notificationSubscriptions(filter: NotificationSubscriptionFilter): [NotificationSubscription!]!
 
   """Pending UserInvitations for this user. Only resolves for the viewer."""
   pendingUserInvitations: [UserInvitation!]!

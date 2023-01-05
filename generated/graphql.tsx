@@ -366,6 +366,13 @@ export type AccountMutationSetPushSecurityEnabledArgs = {
   pushSecurityEnabled: Scalars['Boolean'];
 };
 
+export type AccountNotificationSubscriptionInput = {
+  accountId: Scalars['ID'];
+  event: NotificationEvent;
+  type: NotificationType;
+  userId: Scalars['ID'];
+};
+
 export type AccountQuery = {
   __typename?: 'AccountQuery';
   /** Query an Account by ID */
@@ -541,6 +548,8 @@ export type Actor = {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isExpoAdmin: Scalars['Boolean'];
+  /** If actor is a user, the profile photo URL. */
+  profilePhoto?: Maybe<Scalars['String']>;
 };
 
 
@@ -1207,6 +1216,13 @@ export type AppMutationSetAppInfoArgs = {
 export type AppMutationSetPushSecurityEnabledArgs = {
   appId: Scalars['ID'];
   pushSecurityEnabled: Scalars['Boolean'];
+};
+
+export type AppNotificationSubscriptionInput = {
+  appId: Scalars['ID'];
+  event: NotificationEvent;
+  type: NotificationType;
+  userId: Scalars['ID'];
 };
 
 export enum AppPlatform {
@@ -3286,6 +3302,55 @@ export type MeteredBillingStatus = {
   EAS_UPDATE: Scalars['Boolean'];
 };
 
+export enum NotificationEvent {
+  BuildComplete = 'BUILD_COMPLETE',
+  SubmissionComplete = 'SUBMISSION_COMPLETE'
+}
+
+export type NotificationSubscription = {
+  __typename?: 'NotificationSubscription';
+  account?: Maybe<Account>;
+  actor?: Maybe<Actor>;
+  app?: Maybe<App>;
+  createdAt: Scalars['DateTime'];
+  event: NotificationEvent;
+  id: Scalars['ID'];
+  type: NotificationType;
+};
+
+export type NotificationSubscriptionFilter = {
+  accountId?: InputMaybe<Scalars['ID']>;
+  appId?: InputMaybe<Scalars['ID']>;
+  event?: InputMaybe<NotificationEvent>;
+  type?: InputMaybe<NotificationType>;
+};
+
+export type NotificationSubscriptionMutation = {
+  __typename?: 'NotificationSubscriptionMutation';
+  subscribeToEventForAccount: SubscribeToNotificationResult;
+  subscribeToEventForApp: SubscribeToNotificationResult;
+  unsubscribe: UnsubscribeFromNotificationResult;
+};
+
+
+export type NotificationSubscriptionMutationSubscribeToEventForAccountArgs = {
+  input: AccountNotificationSubscriptionInput;
+};
+
+
+export type NotificationSubscriptionMutationSubscribeToEventForAppArgs = {
+  input: AppNotificationSubscriptionInput;
+};
+
+
+export type NotificationSubscriptionMutationUnsubscribeArgs = {
+  id: Scalars['ID'];
+};
+
+export enum NotificationType {
+  Email = 'EMAIL'
+}
+
 export type Offer = {
   __typename?: 'Offer';
   features?: Maybe<Array<Maybe<Feature>>>;
@@ -3457,6 +3522,8 @@ export type Robot = Actor & {
   firstName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   isExpoAdmin: Scalars['Boolean'];
+  /** Robots don't have profile photos (but actor interface expects this field). */
+  profilePhoto?: Maybe<Scalars['String']>;
 };
 
 
@@ -3572,6 +3639,8 @@ export type RootMutation = {
   keystoreGenerationUrl: KeystoreGenerationUrlMutation;
   /** Mutations that modify the currently authenticated User */
   me: MeMutation;
+  /** Mutations that modify a NotificationSubscription */
+  notificationSubscription: NotificationSubscriptionMutation;
   /** Mutations that create, update, and delete Robots */
   robot: RobotMutation;
   serverlessFunction: ServerlessFunctionMutation;
@@ -4065,6 +4134,11 @@ export enum SubmissionStatus {
   InQueue = 'IN_QUEUE'
 }
 
+export type SubscribeToNotificationResult = {
+  __typename?: 'SubscribeToNotificationResult';
+  notificationSubscription: NotificationSubscription;
+};
+
 export type SubscriptionDetails = {
   __typename?: 'SubscriptionDetails';
   addons: Array<AddonDetails>;
@@ -4089,6 +4163,11 @@ export type SubscriptionDetails = {
 
 export type SubscriptionDetailsPlanEnablementArgs = {
   serviceMetric: EasServiceMetric;
+};
+
+export type UnsubscribeFromNotificationResult = {
+  __typename?: 'UnsubscribeFromNotificationResult';
+  notificationSubscription: NotificationSubscription;
 };
 
 export type Update = ActivityTimelineProjectActivity & {
@@ -4354,6 +4433,7 @@ export type User = Actor & {
   /** @deprecated 'likes' have been deprecated. */
   likes?: Maybe<Array<Maybe<App>>>;
   location?: Maybe<Scalars['String']>;
+  notificationSubscriptions: Array<NotificationSubscription>;
   /** Pending UserInvitations for this user. Only resolves for the viewer. */
   pendingUserInvitations: Array<UserInvitation>;
   /** Associated accounts */
@@ -4396,6 +4476,12 @@ export type UserFeatureGatesArgs = {
 export type UserLikesArgs = {
   limit: Scalars['Int'];
   offset: Scalars['Int'];
+};
+
+
+/** Represents a human (not robot) actor. */
+export type UserNotificationSubscriptionsArgs = {
+  filter?: InputMaybe<NotificationSubscriptionFilter>;
 };
 
 
@@ -4648,7 +4734,7 @@ export type DeleteApplePushKeyResult = {
   id: Scalars['ID'];
 };
 
-export type BuildForBuildListItemFragment = { __typename?: 'Build', id: string, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null };
+export type BuildForBuildsListItemFragment = { __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null };
 
 export type GetAppBuildsQueryVariables = Exact<{
   appId: Scalars['String'];
@@ -4657,7 +4743,7 @@ export type GetAppBuildsQueryVariables = Exact<{
 }>;
 
 
-export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
+export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
 
 export type AccountFragment = { __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null };
 
@@ -4677,9 +4763,13 @@ export type GetAccountAppsQueryVariables = Exact<{
 
 export type GetAccountAppsQuery = { __typename?: 'RootQuery', account: { __typename?: 'AccountQuery', byId: { __typename?: 'Account', id: string, name: string, apps: Array<{ __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null }> } } };
 
-export const BuildForBuildListItemFragmentDoc = gql`
-    fragment BuildForBuildListItem on Build {
+export const BuildForBuildsListItemFragmentDoc = gql`
+    fragment BuildForBuildsListItem on Build {
   id
+  activityTimestamp
+  platform
+  distribution
+  status
   artifacts {
     buildUrl
   }
@@ -4717,12 +4807,12 @@ export const GetAppBuildsDocument = gql`
       id
       name
       builds(limit: $limit, offset: $offset) {
-        ...BuildForBuildListItem
+        ...BuildForBuildsListItem
       }
     }
   }
 }
-    ${BuildForBuildListItemFragmentDoc}`;
+    ${BuildForBuildsListItemFragmentDoc}`;
 
 /**
  * __useGetAppBuildsQuery__

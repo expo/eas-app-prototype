@@ -1,5 +1,9 @@
-fragment BuildForBuildListItem on Build {
+fragment BuildForBuildsListItem on Build {
   id
+  activityTimestamp
+  platform
+  distribution
+  status
   artifacts {
     buildUrl
   }
@@ -11,7 +15,7 @@ query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {
       id
       name
       builds(limit: $limit, offset: $offset) {
-        ...BuildForBuildListItem
+        ...BuildForBuildsListItem
       }
     }
   }
