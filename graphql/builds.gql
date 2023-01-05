@@ -1,0 +1,18 @@
+fragment BuildForBuildListItem on Build {
+  id
+  artifacts {
+    buildUrl
+  }
+}
+
+query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {
+  app {
+    byId(appId: $appId) {
+      id
+      name
+      builds(limit: $limit, offset: $offset) {
+        ...BuildForBuildListItem
+      }
+    }
+  }
+}

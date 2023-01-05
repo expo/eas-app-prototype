@@ -4648,6 +4648,17 @@ export type DeleteApplePushKeyResult = {
   id: Scalars['ID'];
 };
 
+export type BuildForBuildListItemFragment = { __typename?: 'Build', id: string, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null };
+
+export type GetAppBuildsQueryVariables = Exact<{
+  appId: Scalars['String'];
+  offset: Scalars['Int'];
+  limit: Scalars['Int'];
+}>;
+
+
+export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
+
 export type AccountFragment = { __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null };
 
 export type CurrentUserDataFragment = { __typename?: 'User', id: string, username: string, firstName?: string | null, profilePhoto: string, accounts: Array<{ __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null }> };
@@ -4666,6 +4677,14 @@ export type GetAccountAppsQueryVariables = Exact<{
 
 export type GetAccountAppsQuery = { __typename?: 'RootQuery', account: { __typename?: 'AccountQuery', byId: { __typename?: 'Account', id: string, name: string, apps: Array<{ __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null }> } } };
 
+export const BuildForBuildListItemFragmentDoc = gql`
+    fragment BuildForBuildListItem on Build {
+  id
+  artifacts {
+    buildUrl
+  }
+}
+    `;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
   id
@@ -4691,6 +4710,49 @@ export const CurrentUserDataFragmentDoc = gql`
   }
 }
     ${AccountFragmentDoc}`;
+export const GetAppBuildsDocument = gql`
+    query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {
+  app {
+    byId(appId: $appId) {
+      id
+      name
+      builds(limit: $limit, offset: $offset) {
+        ...BuildForBuildListItem
+      }
+    }
+  }
+}
+    ${BuildForBuildListItemFragmentDoc}`;
+
+/**
+ * __useGetAppBuildsQuery__
+ *
+ * To run a query within a React component, call `useGetAppBuildsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAppBuildsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAppBuildsQuery({
+ *   variables: {
+ *      appId: // value for 'appId'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetAppBuildsQuery(baseOptions: Apollo.QueryHookOptions<GetAppBuildsQuery, GetAppBuildsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAppBuildsQuery, GetAppBuildsQueryVariables>(GetAppBuildsDocument, options);
+      }
+export function useGetAppBuildsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAppBuildsQuery, GetAppBuildsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAppBuildsQuery, GetAppBuildsQueryVariables>(GetAppBuildsDocument, options);
+        }
+export type GetAppBuildsQueryHookResult = ReturnType<typeof useGetAppBuildsQuery>;
+export type GetAppBuildsLazyQueryHookResult = ReturnType<typeof useGetAppBuildsLazyQuery>;
+export type GetAppBuildsQueryResult = Apollo.QueryResult<GetAppBuildsQuery, GetAppBuildsQueryVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   viewer {
