@@ -282,7 +282,7 @@ type AccountSSOConfiguration {
   id: ID!
 
   """"""
-  issuer: String
+  issuer: String!
 
   """"""
   jwksEndpoint: String
@@ -318,7 +318,7 @@ input AccountSSOConfigurationData {
   clientSecret: String!
 
   """"""
-  issuer: String
+  issuer: String!
 
   """"""
   jwksEndpoint: String
@@ -363,7 +363,7 @@ type AccountSSOConfigurationPublicData {
   id: ID!
 
   """"""
-  issuer: String
+  issuer: String!
 
   """"""
   jwksEndpoint: String

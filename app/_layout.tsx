@@ -7,7 +7,7 @@ import ApolloClient from "../api/ApolloClient";
 export default function Layout() {
   return (
     <ApolloProvider client={ApolloClient}>
-      <Stack />
+      <Stack screenOptions={{ headerBackTitleVisible: false }} />
     </ApolloProvider>
   );
 }

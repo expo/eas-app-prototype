@@ -1,24 +1,44 @@
+fragment Account on Account {
+  id
+  name
+  owner {
+    id
+    username
+    profilePhoto
+    firstName
+    fullName
+    lastName
+  }
+}
+
 fragment CurrentUserData on User {
   id
   username
   firstName
   profilePhoto
   accounts {
-    id
-    name
-    owner {
-      id
-      username
-      profilePhoto
-      firstName
-      fullName
-      lastName
-    }
+    ...Account
   }
 }
 
 query GetCurrentUser {
   viewer {
     ...CurrentUserData
+  }
+}
+
+query GetAccountApps($accountId: String!, $offset: Int!, $limit: Int!) {
+  account {
+    byId(accountId: $accountId) {
+      id
+      name
+      apps(limit: $limit, offset: $offset, includeUnpublished: true) {
+        id
+        name
+        icon {
+          url
+        }
+      }
+    }
   }
 }
