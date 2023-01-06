@@ -1,9 +1,4 @@
-import {
-  FlatList,
-  ActivityIndicator,
-  StyleSheet,
-  Platform,
-} from "react-native";
+import { FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import { Stack } from "expo-router";
 import { useState } from "react";
 import { spacing } from "@expo/styleguide-native";
@@ -67,12 +62,12 @@ const Project = ({ route }) => {
           <BuildsListItem
             build={item}
             first={index === 0}
-            last={!hasMoreResults && index === builds?.length - 1}
+            last={!loading && index === builds?.length - 1}
           />
         )}
         ItemSeparatorComponent={() => <Divider style={styles.divider} />}
         ListFooterComponent={
-          hasMoreResults && (
+          loading && (
             <>
               {builds?.length ? <Divider style={styles.divider} /> : null}
               <ListItem first={!builds?.length} last>
