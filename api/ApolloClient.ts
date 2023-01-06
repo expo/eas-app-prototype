@@ -26,7 +26,35 @@ const authMiddlewareLink = setContext(() => {
 
 const link = authMiddlewareLink.concat(httpLink);
 
-const cache = new InMemoryCache();
+const mergeBasedOnOffset = (
+  existing: any[],
+  incoming: any[],
+  { args }: FieldFunctionOptions
+) => {
+  const merged = existing ? existing.slice(0) : [];
+
+  for (let i = 0; i < incoming.length; ++i) {
+    merged[i + args.offset] = incoming[i];
+  }
+  return merged;
+};
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    AppQuery: {
+      keyFields: ["byId", ["id"]],
+    },
+    App: {
+      keyFields: ["id"],
+      fields: {
+        builds: {
+          keyArgs: ["limit"],
+          merge: mergeBasedOnOffset,
+        },
+      },
+    },
+  },
+});
 
 export const useApolloClient = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
