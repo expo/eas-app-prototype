@@ -26,19 +26,3 @@ query GetCurrentUser {
     ...CurrentUserData
   }
 }
-
-query GetAccountApps($accountId: String!, $offset: Int!, $limit: Int!) {
-  account {
-    byId(accountId: $accountId) {
-      id
-      name
-      apps(limit: $limit, offset: $offset, includeUnpublished: true) {
-        id
-        name
-        icon {
-          url
-        }
-      }
-    }
-  }
-}

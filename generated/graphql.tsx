@@ -4743,14 +4743,7 @@ export type GetAppBuildsQueryVariables = Exact<{
 
 export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null, project: { __typename?: 'App', id: string } | { __typename?: 'Snack', id: string } }> } } };
 
-export type AccountFragment = { __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null };
-
-export type CurrentUserDataFragment = { __typename?: 'User', id: string, username: string, firstName?: string | null, profilePhoto: string, accounts: Array<{ __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null }> };
-
-export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetCurrentUserQuery = { __typename?: 'RootQuery', viewer?: { __typename?: 'User', id: string, username: string, firstName?: string | null, profilePhoto: string, accounts: Array<{ __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null }> } | null };
+export type ProjectForProjectsListItemFragment = { __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null };
 
 export type GetAccountAppsQueryVariables = Exact<{
   accountId: Scalars['String'];
@@ -4760,6 +4753,15 @@ export type GetAccountAppsQueryVariables = Exact<{
 
 
 export type GetAccountAppsQuery = { __typename?: 'RootQuery', account: { __typename?: 'AccountQuery', byId: { __typename?: 'Account', id: string, name: string, apps: Array<{ __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null }> } } };
+
+export type AccountFragment = { __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null };
+
+export type CurrentUserDataFragment = { __typename?: 'User', id: string, username: string, firstName?: string | null, profilePhoto: string, accounts: Array<{ __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null }> };
+
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserQuery = { __typename?: 'RootQuery', viewer?: { __typename?: 'User', id: string, username: string, firstName?: string | null, profilePhoto: string, accounts: Array<{ __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null }> } | null };
 
 export const BuildForUseDownloadBuildFragmentDoc = gql`
     fragment BuildForUseDownloadBuild on Build {
@@ -4783,6 +4785,15 @@ export const BuildForBuildsListItemFragmentDoc = gql`
   status
 }
     ${BuildForUseDownloadBuildFragmentDoc}`;
+export const ProjectForProjectsListItemFragmentDoc = gql`
+    fragment ProjectForProjectsListItem on App {
+  id
+  name
+  icon {
+    url
+  }
+}
+    `;
 export const AccountFragmentDoc = gql`
     fragment Account on Account {
   id
@@ -4851,6 +4862,50 @@ export function useGetAppBuildsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetAppBuildsQueryHookResult = ReturnType<typeof useGetAppBuildsQuery>;
 export type GetAppBuildsLazyQueryHookResult = ReturnType<typeof useGetAppBuildsLazyQuery>;
 export type GetAppBuildsQueryResult = Apollo.QueryResult<GetAppBuildsQuery, GetAppBuildsQueryVariables>;
+export const GetAccountAppsDocument = gql`
+    query GetAccountApps($accountId: String!, $offset: Int!, $limit: Int!) {
+  account {
+    byId(accountId: $accountId) {
+      id
+      name
+      apps(limit: $limit, offset: $offset, includeUnpublished: true) {
+        id
+        ...ProjectForProjectsListItem
+      }
+    }
+  }
+}
+    ${ProjectForProjectsListItemFragmentDoc}`;
+
+/**
+ * __useGetAccountAppsQuery__
+ *
+ * To run a query within a React component, call `useGetAccountAppsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountAppsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAccountAppsQuery({
+ *   variables: {
+ *      accountId: // value for 'accountId'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetAccountAppsQuery(baseOptions: Apollo.QueryHookOptions<GetAccountAppsQuery, GetAccountAppsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAccountAppsQuery, GetAccountAppsQueryVariables>(GetAccountAppsDocument, options);
+      }
+export function useGetAccountAppsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountAppsQuery, GetAccountAppsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAccountAppsQuery, GetAccountAppsQueryVariables>(GetAccountAppsDocument, options);
+        }
+export type GetAccountAppsQueryHookResult = ReturnType<typeof useGetAccountAppsQuery>;
+export type GetAccountAppsLazyQueryHookResult = ReturnType<typeof useGetAccountAppsLazyQuery>;
+export type GetAccountAppsQueryResult = Apollo.QueryResult<GetAccountAppsQuery, GetAccountAppsQueryVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   viewer {
@@ -4885,50 +4940,3 @@ export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
-export const GetAccountAppsDocument = gql`
-    query GetAccountApps($accountId: String!, $offset: Int!, $limit: Int!) {
-  account {
-    byId(accountId: $accountId) {
-      id
-      name
-      apps(limit: $limit, offset: $offset, includeUnpublished: true) {
-        id
-        name
-        icon {
-          url
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAccountAppsQuery__
- *
- * To run a query within a React component, call `useGetAccountAppsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAccountAppsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAccountAppsQuery({
- *   variables: {
- *      accountId: // value for 'accountId'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useGetAccountAppsQuery(baseOptions: Apollo.QueryHookOptions<GetAccountAppsQuery, GetAccountAppsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAccountAppsQuery, GetAccountAppsQueryVariables>(GetAccountAppsDocument, options);
-      }
-export function useGetAccountAppsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountAppsQuery, GetAccountAppsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAccountAppsQuery, GetAccountAppsQueryVariables>(GetAccountAppsDocument, options);
-        }
-export type GetAccountAppsQueryHookResult = ReturnType<typeof useGetAccountAppsQuery>;
-export type GetAccountAppsLazyQueryHookResult = ReturnType<typeof useGetAccountAppsLazyQuery>;
-export type GetAccountAppsQueryResult = Apollo.QueryResult<GetAccountAppsQuery, GetAccountAppsQueryVariables>;

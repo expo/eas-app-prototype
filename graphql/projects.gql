@@ -1,0 +1,20 @@
+fragment ProjectForProjectsListItem on App {
+  id
+  name
+  icon {
+    url
+  }
+}
+
+query GetAccountApps($accountId: String!, $offset: Int!, $limit: Int!) {
+  account {
+    byId(accountId: $accountId) {
+      id
+      name
+      apps(limit: $limit, offset: $offset, includeUnpublished: true) {
+        id
+        ...ProjectForProjectsListItem
+      }
+    }
+  }
+}

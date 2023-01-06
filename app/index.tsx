@@ -1,8 +1,5 @@
 import {
-  Text,
   FlatList,
-  View,
-  Image,
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
@@ -10,14 +7,15 @@ import {
 } from "react-native";
 import { Stack, useLink } from "expo-router";
 import { useState } from "react";
+import { spacing } from "@expo/styleguide-native";
+import { Text, Divider, Heading, View } from "expo-dev-client-components";
 
 import {
   AccountFragment,
   useGetAccountAppsQuery,
   useGetCurrentUserQuery,
 } from "../generated/graphql";
-import ListItem from "../components/ListItem";
-import { spacing } from "@expo/styleguide-native";
+import ProjectsListItem from "../components/ProjectsListItem";
 
 const Home = () => {
   const link = useLink();
@@ -42,43 +40,47 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.flex}>
       <Stack.Screen options={{ title: "EAS Prototype" }} />
-      <View style={styles.accounts}>
-        <Text>
-          Current Account:{" "}
-          <Text style={styles.highlightedText}>{selectedAccount?.name}</Text>
-        </Text>
-        <Text style={styles.changeAccount}>Change account:</Text>
-        {otherAccounts?.map((account) => (
-          <TouchableOpacity
-            key={account.id}
-            onPress={() => setSelectedAccount(account)}
-          >
-            <Text style={styles.accountText}>{account.name}</Text>
-          </TouchableOpacity>
-        ))}
+      <View padding="medium">
+        <View style={styles.accounts}>
+          <Text>
+            Current Account:{" "}
+            <Text style={styles.highlightedText}>{selectedAccount?.name}</Text>
+          </Text>
+          <Text style={styles.changeAccount}>Change account:</Text>
+          {otherAccounts?.map((account) => (
+            <TouchableOpacity
+              key={account.id}
+              onPress={() => setSelectedAccount(account)}
+            >
+              <Text style={styles.accountText}>{account.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Heading
+          color="secondary"
+          size="small"
+          style={{ marginRight: spacing[2] }}
+          type="InterSemiBold"
+        >
+          Projects
+        </Heading>
+        <FlatList
+          data={apps}
+          contentContainerStyle={styles.listContentContainer}
+          renderItem={({ item, index }) => (
+            <ProjectsListItem
+              onPress={() => link.push(`/projects/${item.id}`)}
+              first={index === 0}
+              last={index === apps?.length - 1}
+              project={item}
+            />
+          )}
+          ItemSeparatorComponent={() => <Divider style={{ height: 1 }} />}
+          ListEmptyComponent={
+            !data && loading ? <ActivityIndicator size="small" /> : null
+          }
+        />
       </View>
-
-      <FlatList
-        ListHeaderComponent={<Text>Projects</Text>}
-        data={apps}
-        contentContainerStyle={styles.listContentContainer}
-        renderItem={({ item }) => (
-          <ListItem
-            onPress={() => link.push(`/projects/${item.id}`)}
-            accessoryLeft={
-              <Image
-                source={{ uri: item.icon?.url }}
-                style={styles.projectIcon}
-              />
-            }
-          >
-            <Text>{item.name}</Text>
-          </ListItem>
-        )}
-        ListEmptyComponent={
-          !data && loading ? <ActivityIndicator size="small" /> : null
-        }
-      />
     </SafeAreaView>
   );
 };

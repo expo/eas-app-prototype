@@ -1,4 +1,4 @@
-import { borderRadius, spacing } from "@expo/styleguide-native";
+import { spacing } from "@expo/styleguide-native";
 import { View } from "expo-dev-client-components";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
@@ -54,10 +54,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   accessoryLeft: {
-    marginRight: spacing["1.5"],
+    marginRight: spacing[2],
   },
   accessoryRight: {
-    marginLeft: spacing["1.5"],
+    marginLeft: spacing[2],
   },
   flex: {
     flex: 1,
