@@ -4,9 +4,10 @@ import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import ApolloClient from "../api/ApolloClient";
+import { useApolloClient } from "../api/ApolloClient";
 
 export default function Layout() {
+  const { client } = useApolloClient();
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("../assets/Inter/Inter-Regular.otf"),
     "Inter-SemiBold": require("../assets/Inter/Inter-SemiBold.otf"),
@@ -18,12 +19,12 @@ export default function Layout() {
     }
   }, []);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !client) {
     return null;
   }
 
   return (
-    <ApolloProvider client={ApolloClient}>
+    <ApolloProvider client={client}>
       <Stack
         screenOptions={{
           headerBackTitleVisible: false,
