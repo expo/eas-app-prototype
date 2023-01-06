@@ -75,7 +75,7 @@ const Home = () => {
               project={item}
             />
           )}
-          ItemSeparatorComponent={() => <Divider style={{ height: 1 }} />}
+          ItemSeparatorComponent={() => <Divider style={styles.divider} />}
           ListEmptyComponent={
             !data && loading ? <ActivityIndicator size="small" /> : null
           }
@@ -111,5 +111,8 @@ const styles = StyleSheet.create({
   },
   listContentContainer: {
     padding: spacing[2],
+  },
+  divider: {
+    height: 1,
   },
 });

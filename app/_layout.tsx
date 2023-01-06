@@ -6,8 +6,6 @@ import * as SplashScreen from "expo-splash-screen";
 
 import ApolloClient from "../api/ApolloClient";
 
-SplashScreen.preventAutoHideAsync();
-
 export default function Layout() {
   const [fontsLoaded] = useFonts({
     "Inter-Regular": require("../assets/Inter/Inter-Regular.otf"),
@@ -26,7 +24,12 @@ export default function Layout() {
 
   return (
     <ApolloProvider client={ApolloClient}>
-      <Stack screenOptions={{ headerBackTitleVisible: false }} />
+      <Stack
+        screenOptions={{
+          headerBackTitleVisible: false,
+          animation: "slide_from_right",
+        }}
+      />
     </ApolloProvider>
   );
 }

@@ -14,6 +14,7 @@
     "@expo/styleguide-native": "^6.1.0",
     "@types/react": "~18.0.24",
     "@types/react-native": "~0.70.6",
+    "date-fns": "^2.29.3",
     "expo": "~47.0.9",
     "expo-constants": "~14.0.2",
     "expo-dev-client": "~2.0.1",
