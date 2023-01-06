@@ -82,8 +82,8 @@ const Project = ({ route }) => {
         ListFooterComponent={
           hasMoreResults && (
             <>
-              <Divider style={styles.divider} />
-              <ListItem last>
+              {builds?.length ? <Divider style={styles.divider} /> : null}
+              <ListItem first={!builds?.length} last>
                 <ActivityIndicator size="small" />
               </ListItem>
             </>
