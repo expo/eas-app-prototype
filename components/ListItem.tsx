@@ -1,12 +1,14 @@
 import { borderRadius, spacing } from "@expo/styleguide-native";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { theme } from "../utils/theme";
+import { View } from "expo-dev-client-components";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 interface Props {
   accessoryLeft?: React.ReactNode;
   accessoryRight?: React.ReactNode;
   children: React.ReactNode;
   onPress?: () => void;
+  first?: boolean;
+  last?: boolean;
 }
 
 const ListItem = ({
@@ -14,10 +16,26 @@ const ListItem = ({
   accessoryRight,
   children,
   onPress,
+  first,
+  last,
 }: Props) => {
   return (
     <TouchableOpacity onPress={onPress} disabled={!onPress}>
-      <View style={styles.item}>
+      <View
+        border="default"
+        overflow="hidden"
+        bg="default"
+        padding="medium"
+        roundedTop={first ? "large" : undefined}
+        roundedBottom={last ? "large" : undefined}
+        style={[
+          styles.item,
+          {
+            borderBottomWidth: last ? 1 : 0,
+            borderTopWidth: first ? 1 : 0,
+          },
+        ]}
+      >
         {accessoryLeft ? (
           <View style={styles.accessoryLeft}>{accessoryLeft}</View>
         ) : null}
@@ -32,13 +50,6 @@ export default ListItem;
 
 const styles = StyleSheet.create({
   item: {
-    padding: spacing[3],
-    marginVertical: spacing[1],
-    backgroundColor: theme.background.default,
-    borderRadius: borderRadius.lg,
-    borderColor: theme.border.default,
-    borderWidth: 1,
-    width: "100%",
     flexDirection: "row",
     alignItems: "center",
   },

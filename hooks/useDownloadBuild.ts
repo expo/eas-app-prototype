@@ -65,7 +65,7 @@ export const useDownloadBuild = ({ build }: UseDownloadBuildParams) => {
       }
     }
 
-    return installAndroidBuild(localUri);
+    return installAndroidBuild(buildUri);
   };
 
   const pauseDownload = async () => {
