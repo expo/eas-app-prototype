@@ -5,15 +5,15 @@ import {
   Platform,
 } from "react-native";
 import { Stack } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { spacing } from "@expo/styleguide-native";
-import * as Device from "expo-device";
 
 import { useGetAppBuildsQuery } from "../../generated/graphql";
 import BuildsListItem from "../../components/BuildsListItem";
 import { Divider, Heading, View } from "expo-dev-client-components";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ListItem from "../../components/ListItem";
+import SideLoadingChecker from "../../components/SideLoadingChecker";
 
 const PAGE_LIMIT = 15;
 
@@ -30,15 +30,6 @@ const Project = ({ route }) => {
   const app = data?.app?.byId;
   const builds = app?.builds;
 
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      Device.isSideLoadingEnabledAsync().then((value) => {
-        // TODO: If not enabled show "Install unknown apps" permission
-        console.log("Is side loading enabled? ", value);
-      });
-    }
-  }, []);
-
   const onEndReached = async () => {
     if (loading || !hasMoreResults) {
       return;
@@ -54,6 +45,7 @@ const Project = ({ route }) => {
   return (
     <View style={styles.flex}>
       <Stack.Screen options={{ title: app?.name || "" }} />
+      <SideLoadingChecker />
       <FlatList
         data={builds}
         onEndReached={onEndReached}
@@ -61,7 +53,7 @@ const Project = ({ route }) => {
           <Heading
             color="secondary"
             size="large"
-            style={{ marginRight: spacing[2] }}
+            style={styles.heading}
             type="InterSemiBold"
           >
             Builds
@@ -105,5 +97,8 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
+  },
+  heading: {
+    marginBottom: spacing[2],
   },
 });
