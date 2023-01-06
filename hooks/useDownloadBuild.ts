@@ -86,17 +86,11 @@ export const useDownloadBuild = ({ build }: UseDownloadBuildParams) => {
 };
 
 const installAndroidBuild = async (uri: string) => {
-  if (Platform.OS === "android") {
-    const cUri = await FileSystem.getContentUriAsync(uri);
+  const cUri = await FileSystem.getContentUriAsync(uri);
 
-    await startActivityAsync("android.intent.action.VIEW", {
-      data: cUri,
-      type: "application/vnd.android.package-archive",
-      flags: 1,
-    });
-    return;
-  }
-
-  if (Platform.OS === "ios") {
-  }
+  await startActivityAsync("android.intent.action.VIEW", {
+    data: cUri,
+    type: "application/vnd.android.package-archive",
+    flags: 1,
+  });
 };
