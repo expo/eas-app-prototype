@@ -59,7 +59,7 @@ const Home = () => {
   }, [apps, builds]);
 
   const onEndReached = async () => {
-    if (loading || !apps?.length || !hasMoreResults) {
+    if (loading || !hasMoreResults) {
       return;
     }
 
@@ -67,7 +67,7 @@ const Home = () => {
       variables: { offset: apps.length },
     });
 
-    setHasMoreResults(fetchMoreData.account?.byId?.builds?.length === PAGE_LIMIT);
+    setHasMoreResults(fetchMoreData.account?.byId?.apps?.length === PAGE_LIMIT);
   };
 
   const refresh = async () => {

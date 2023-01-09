@@ -40,6 +40,17 @@ const cache = new InMemoryCache({
     AppQuery: {
       keyFields: ['byId', ['id']],
     },
+    AccountQuery: {
+      keyFields: ['byId', ['id']],
+    },
+    Account: {
+      fields: {
+        apps: {
+          keyArgs: ['limit'],
+          merge: mergeBasedOnOffset,
+        },
+      },
+    },
     App: {
       keyFields: ['id'],
       fields: {
