@@ -55,7 +55,7 @@ const cache = new InMemoryCache({
       keyFields: ['id'],
       fields: {
         builds: {
-          keyArgs: ['limit'],
+          keyArgs: ['limit', 'platform'],
           merge: mergeBasedOnOffset,
         },
       },

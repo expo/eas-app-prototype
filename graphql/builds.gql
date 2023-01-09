@@ -24,12 +24,12 @@ fragment BuildForBuildsListItem on Build {
   }
 }
 
-query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {
+query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!, $platform: AppPlatform) {
   app {
     byId(appId: $appId) {
       id
       name
-      builds(limit: $limit, offset: $offset) {
+      builds(limit: $limit, offset: $offset, status: FINISHED, platform: $platform) {
         ...BuildForBuildsListItem
       }
     }

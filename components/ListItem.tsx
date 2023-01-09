@@ -30,7 +30,7 @@ const ListItem = ({ accessoryLeft, accessoryRight, children, onPress, first, las
         ]}>
         {accessoryLeft ? <View style={styles.accessoryLeft}>{accessoryLeft}</View> : null}
         <View style={styles.flex}>{children}</View>
-        {accessoryRight ? <View>{accessoryRight}</View> : null}
+        {accessoryRight ? <View style={styles.accessoryRight}>{accessoryRight}</View> : null}
       </View>
     </TouchableOpacity>
   );
