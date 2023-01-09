@@ -16,6 +16,10 @@ fragment BuildForBuildsListItem on Build {
   platform
   distribution
   status
+  project {
+    id
+    name
+  }
 }
 
 query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {

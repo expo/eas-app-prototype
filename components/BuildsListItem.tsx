@@ -13,9 +13,10 @@ interface Props {
   build: BuildForBuildsListItemFragment;
   first?: boolean;
   last?: boolean;
+  showProjectName?: boolean;
 }
 
-const BuildsListItem = ({ build, first, last }: Props) => {
+const BuildsListItem = ({ build, first, last, showProjectName }: Props) => {
   const { downloadBuild, pauseDownload, progress, status } = useDownloadBuild({
     build,
   });
@@ -36,10 +37,11 @@ const BuildsListItem = ({ build, first, last }: Props) => {
       }
       first={first}
       last={last}>
-      <Text>
+      <Text type="InterSemiBold">
+        {showProjectName ? `${build.project?.name} ` : ''}
         {BuildPlatform[build.platform]} {BuildDistribution[build.distribution]} build
       </Text>
-      <Text>
+      <Text type="InterRegular" size="small">
         {formatDistanceToNow(new Date(build.activityTimestamp), {
           addSuffix: true,
         })}

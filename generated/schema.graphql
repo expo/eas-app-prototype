@@ -1127,6 +1127,9 @@ type App implements Project {
   ): [Deployment!]!
 
   """"""
+  deploymentsNew(after: String, before: String, first: Int, last: Int): DeploymentsConnection!
+
+  """"""
   description: String!
 
   """Environment secrets for an app"""
@@ -2073,6 +2076,9 @@ type Build implements ActivityTimelineProjectActivity & BuildOrBuildJob {
   artifacts: BuildArtifacts
 
   """"""
+  buildMode: BuildMode
+
+  """"""
   buildProfile: String
 
   """"""
@@ -2451,6 +2457,9 @@ input BuildMetadataInput {
 
   """"""
   appVersion: String
+
+  """"""
+  buildMode: BuildMode
 
   """"""
   buildProfile: String
@@ -3081,13 +3090,22 @@ type DeploymentBuildEdge {
   node: Build!
 }
 
-""""""
+"""Represents the connection over the builds edge of a Deployment"""
 type DeploymentBuildsConnection {
   """"""
   edges: [DeploymentBuildEdge!]!
 
   """"""
   pageInfo: PageInfo!
+}
+
+""""""
+type DeploymentEdge {
+  """"""
+  cursor: String!
+
+  """"""
+  node: DeploymentNew!
 }
 
 """
@@ -3111,6 +3129,15 @@ type DeploymentNew {
 input DeploymentOptions {
   """Max number of associated builds to return"""
   buildListMaxSize: Int
+}
+
+"""Represents the connection over the deploymentsNew edge of an App"""
+type DeploymentsConnection {
+  """"""
+  edges: [DeploymentEdge!]!
+
+  """"""
+  pageInfo: PageInfo!
 }
 
 """"""
