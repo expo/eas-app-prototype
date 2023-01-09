@@ -5,6 +5,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import { useApolloClient } from "../api/ApolloClient";
+import { UserAccountProvider } from "../utils/UserAccountContext";
 
 export default function Layout() {
   const { client } = useApolloClient();
@@ -25,12 +26,23 @@ export default function Layout() {
 
   return (
     <ApolloProvider client={client}>
-      <Stack
-        screenOptions={{
-          headerBackTitleVisible: false,
-          animation: "slide_from_right",
-        }}
-      />
+      <UserAccountProvider>
+        <Stack
+          screenOptions={{
+            headerBackTitleVisible: false,
+            animation: "slide_from_right",
+          }}
+        >
+          <Stack.Screen
+            name="account"
+            options={{
+              presentation: "modal",
+              headerShown: false,
+              animation: "slide_from_bottom",
+            }}
+          />
+        </Stack>
+      </UserAccountProvider>
     </ApolloProvider>
   );
 }
