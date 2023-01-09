@@ -2661,12 +2661,19 @@ enum BuildResourceClass {
   IOS_DEFAULT
 
   """"""
+  IOS_INTEL_LARGE
+
+  """"""
+  IOS_INTEL_MEDIUM
+
+  """"""
   IOS_LARGE
 
-  """
-  @experimental This resource class is not yet ready to be used in production. For testing purposes only.
-  """
+  """"""
   IOS_M1_LARGE
+
+  """"""
+  IOS_M1_MEDIUM
 
   """"""
   LEGACY

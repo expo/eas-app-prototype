@@ -1,4 +1,4 @@
-import { FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import { FlatList, ActivityIndicator, StyleSheet, RefreshControl } from 'react-native';
 import { Stack } from 'expo-router';
 import { useState } from 'react';
 import { spacing } from '@expo/styleguide-native';
@@ -9,6 +9,8 @@ import { Divider, Heading, View } from 'expo-dev-client-components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ListItem from '../../components/ListItem';
 import SideLoadingChecker from '../../components/SideLoadingChecker';
+import { useThrottle } from '../../hooks/useThrottle';
+import { NetworkStatus } from '@apollo/client';
 
 const PAGE_LIMIT = 15;
 
@@ -16,9 +18,14 @@ const Project = ({ route }) => {
   const { id } = route.params;
   const insets = useSafeAreaInsets();
 
-  const { data, loading, fetchMore } = useGetAppBuildsQuery({
+  const { data, loading, fetchMore, networkStatus, refetch } = useGetAppBuildsQuery({
     fetchPolicy: 'cache-and-network',
-    variables: { appId: id, limit: PAGE_LIMIT, offset: 0 },
+    variables: {
+      appId: id,
+      limit: PAGE_LIMIT,
+      offset: 0,
+    },
+    notifyOnNetworkStatusChange: true,
   });
   const [hasMoreResults, setHasMoreResults] = useState(true);
 
@@ -35,6 +42,13 @@ const Project = ({ route }) => {
     });
 
     setHasMoreResults(fetchMoreData.app?.byId?.builds?.length === PAGE_LIMIT);
+  };
+
+  const refetching = useThrottle(networkStatus === NetworkStatus.refetch, 800);
+
+  const refresh = async () => {
+    setHasMoreResults(true);
+    await refetch();
   };
 
   return (
@@ -61,6 +75,7 @@ const Project = ({ route }) => {
           />
         )}
         ItemSeparatorComponent={() => <Divider style={styles.divider} />}
+        refreshControl={<RefreshControl refreshing={refetching} onRefresh={refresh} />}
         ListFooterComponent={
           loading && (
             <>

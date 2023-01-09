@@ -17,20 +17,18 @@ interface Props {
 }
 
 const BuildsListItem = ({ build, first, last, showProjectName }: Props) => {
-  const { downloadBuild, pauseDownload, progress, status } = useDownloadBuild({
+  const { toggleDownload, label, progress, status } = useDownloadBuild({
     build,
   });
 
   return (
     <ListItem
-      onPress={() => {
-        status === DownloadStatus.IN_PROGRESS ? pauseDownload() : downloadBuild();
-      }}
+      onPress={toggleDownload}
       accessoryRight={
         status === DownloadStatus.IN_PROGRESS ? (
           <CircularProgress percentage={progress} size={28} />
         ) : status === DownloadStatus.COMPLETED ? (
-          <Text>Install</Text>
+          <Text>{label}</Text>
         ) : (
           <Ionicons name="download-outline" size={24} color={lightTheme.icon.default} />
         )
