@@ -1,7 +1,7 @@
 import { useLink } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Row, XIcon, useExpoTheme, Divider, Spacer } from 'expo-dev-client-components';
-import { TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { TouchableOpacity, StyleSheet, FlatList, Platform, SafeAreaView } from 'react-native';
 import { borderRadius, spacing } from '@expo/styleguide-native';
 
 import SectionHeader from '../components/SectionHeader';
@@ -23,8 +23,8 @@ const AccountModal = ({ navigation }) => {
   const accounts = data?.viewer?.accounts;
 
   return (
-    <View flex="1">
-      <StatusBar style="light" />
+    <SafeAreaView style={styles.flex}>
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       <Row justify="between" align="center">
         <View padding="medium">
           <Text type="InterBold">Account</Text>
@@ -82,7 +82,7 @@ const AccountModal = ({ navigation }) => {
           ItemSeparatorComponent={() => <Divider style={styles.divider} />}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -91,6 +91,9 @@ export default AccountModal;
 const styles = StyleSheet.create({
   divider: {
     height: 1,
+  },
+  flex: {
+    flex: 1,
   },
   noPaddingTop: {
     paddingTop: 0,

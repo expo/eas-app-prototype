@@ -6,9 +6,12 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { useApolloClient } from '../api/ApolloClient';
 import { UserAccountProvider } from '../utils/UserAccountContext';
+import { StatusBar } from 'react-native';
+import { useExpoTheme } from 'expo-dev-client-components';
 
 export default function Layout() {
   const { client } = useApolloClient();
+  const theme = useExpoTheme();
   const [fontsLoaded] = useFonts({
     'Inter-Bold': require('../assets/Inter/Inter-Bold.otf'),
     'Inter-Regular': require('../assets/Inter/Inter-Regular.otf'),
@@ -28,6 +31,7 @@ export default function Layout() {
   return (
     <ApolloProvider client={client}>
       <UserAccountProvider>
+        <StatusBar backgroundColor={theme.background.default} translucent={false} />
         <Stack
           screenOptions={{
             headerBackTitleVisible: false,
