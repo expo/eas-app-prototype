@@ -28,6 +28,7 @@
     "expo-intent-launcher": "~10.3.1",
     "expo-linking": "~3.3.0",
     "expo-router": "^0.0.40",
+    "expo-sharing": "~11.0.1",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
     "graphql": "^16.6.0",

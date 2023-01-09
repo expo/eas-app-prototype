@@ -1,11 +1,13 @@
 fragment BuildForUseDownloadBuild on Build {
   id
   platform
+  distribution
   artifacts {
     buildUrl
   }
   project {
     id
+    slug
   }
 }
 
