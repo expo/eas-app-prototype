@@ -1,4 +1,4 @@
-const host = "exp.host";
+const host = 'exp.host';
 const origin = `https://${host}`;
 
 export default {

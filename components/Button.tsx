@@ -1,14 +1,9 @@
-import { borderRadius } from "@expo/styleguide-native";
-import {
-  ExpoTheme,
-  scale,
-  Text,
-  useExpoTheme,
-} from "expo-dev-client-components";
-import React from "react";
-import { ActivityIndicator, TouchableOpacity, ViewStyle } from "react-native";
+import { borderRadius } from '@expo/styleguide-native';
+import { ExpoTheme, scale, Text, useExpoTheme } from 'expo-dev-client-components';
+import React from 'react';
+import { ActivityIndicator, TouchableOpacity, ViewStyle } from 'react-native';
 
-type Theme = "primary" | "secondary" | "tertiary" | "ghost" | "error";
+type Theme = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'error';
 
 type Props = {
   label: string;
@@ -29,29 +24,29 @@ function getThemeColors(
   color: string;
 } {
   switch (theme) {
-    case "primary":
+    case 'primary':
       return {
         backgroundColor: expoTheme.button.primary.background,
         color: expoTheme.button.primary.foreground,
       };
-    case "secondary":
+    case 'secondary':
       return {
         backgroundColor: expoTheme.button.secondary.background,
         color: expoTheme.button.secondary.foreground,
       };
-    case "tertiary":
+    case 'tertiary':
       return {
         backgroundColor: expoTheme.button.tertiary.background,
         color: expoTheme.button.tertiary.foreground,
       };
-    case "ghost":
+    case 'ghost':
       return {
         backgroundColor: expoTheme.button.ghost.background,
         color: expoTheme.button.ghost.foreground,
         borderColor: expoTheme.button.ghost.border,
         borderWidth: 1,
       };
-    case "error":
+    case 'error':
       return {
         backgroundColor: expoTheme.background.error,
         color: expoTheme.text.error,
@@ -61,20 +56,10 @@ function getThemeColors(
   }
 }
 
-export function Button({
-  label,
-  theme = "tertiary",
-  onPress,
-  loading,
-  disabled,
-  style,
-}: Props) {
+export function Button({ label, theme = 'tertiary', onPress, loading, disabled, style }: Props) {
   const expoTheme = useExpoTheme();
 
-  const { backgroundColor, borderColor, borderWidth, color } = getThemeColors(
-    theme,
-    expoTheme
-  );
+  const { backgroundColor, borderColor, borderWidth, color } = getThemeColors(theme, expoTheme);
 
   return (
     <TouchableOpacity
@@ -91,8 +76,7 @@ export function Button({
         style,
       ]}
       disabled={disabled}
-      onPress={onPress}
-    >
+      onPress={onPress}>
       {loading ? (
         <ActivityIndicator />
       ) : (

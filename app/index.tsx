@@ -1,17 +1,12 @@
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
-import { Stack, useLink } from "expo-router";
-import { spacing } from "@expo/styleguide-native";
-import { Divider, Heading, View } from "expo-dev-client-components";
+import { FlatList, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
+import { Stack, useLink } from 'expo-router';
+import { spacing } from '@expo/styleguide-native';
+import { Divider, Heading, View } from 'expo-dev-client-components';
 
-import { useGetAccountAppsQuery } from "../generated/graphql";
-import ProjectsListItem from "../components/ProjectsListItem";
-import UserAccountAvatar from "../components/UserAccountAvatar";
-import { useUserAccount } from "../utils/UserAccountContext";
+import { useGetAccountAppsQuery } from '../generated/graphql';
+import ProjectsListItem from '../components/ProjectsListItem';
+import UserAccountAvatar from '../components/UserAccountAvatar';
+import { useUserAccount } from '../utils/UserAccountContext';
 
 const Home = () => {
   const link = useLink();
@@ -28,17 +23,12 @@ const Home = () => {
     <SafeAreaView style={styles.flex}>
       <Stack.Screen
         options={{
-          title: "EAS Prototype",
+          title: 'EAS Prototype',
           headerRight: () => <UserAccountAvatar />,
         }}
       />
       <View padding="medium">
-        <Heading
-          color="secondary"
-          size="small"
-          style={styles.heading}
-          type="InterSemiBold"
-        >
+        <Heading color="secondary" size="small" style={styles.heading} type="InterSemiBold">
           Projects
         </Heading>
         <FlatList
@@ -53,9 +43,7 @@ const Home = () => {
             />
           )}
           ItemSeparatorComponent={() => <Divider style={styles.divider} />}
-          ListEmptyComponent={
-            !data && loading ? <ActivityIndicator size="small" /> : null
-          }
+          ListEmptyComponent={!data && loading ? <ActivityIndicator size="small" /> : null}
         />
       </View>
     </SafeAreaView>
@@ -79,7 +67,7 @@ const styles = StyleSheet.create({
     padding: spacing[3],
   },
   highlightedText: {
-    fontWeight: "600",
+    fontWeight: '600',
   },
   changeAccount: {
     marginTop: spacing[3],
@@ -87,7 +75,7 @@ const styles = StyleSheet.create({
   accountText: {
     marginLeft: spacing[2],
     marginTop: spacing[0],
-    color: "blue",
+    color: 'blue',
   },
   listContentContainer: {
     padding: spacing[2],

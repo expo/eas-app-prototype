@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Linking, Platform } from "react-native";
-import * as FileSystem from "expo-file-system";
-import { startActivityAsync } from "expo-intent-launcher";
-import { BuildForUseDownloadBuildFragment } from "../generated/graphql";
+import { useState } from 'react';
+import { Linking, Platform } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import { startActivityAsync } from 'expo-intent-launcher';
+import { BuildForUseDownloadBuildFragment } from '../generated/graphql';
 
 export enum DownloadStatus {
-  COMPLETED = "completed",
-  ERROR = "error",
-  IN_PROGRESS = "in_progress",
-  PAUSED = "paused",
+  COMPLETED = 'completed',
+  ERROR = 'error',
+  IN_PROGRESS = 'in_progress',
+  PAUSED = 'paused',
 }
 
 interface UseDownloadBuildParams {
@@ -20,7 +20,7 @@ export const useDownloadBuild = ({ build }: UseDownloadBuildParams) => {
   const [progress, setProgress] = useState<number>();
   const [status, setStatus] = useState<DownloadStatus>();
   const buildUrl = build?.artifacts?.buildUrl;
-  const buildName = buildUrl?.substring(buildUrl?.lastIndexOf("/") + 1);
+  const buildName = buildUrl?.substring(buildUrl?.lastIndexOf('/') + 1);
 
   const downloadResumable = FileSystem.createDownloadResumable(
     buildUrl,
@@ -28,15 +28,14 @@ export const useDownloadBuild = ({ build }: UseDownloadBuildParams) => {
     {},
     (downloadProgress) => {
       const progress =
-        (downloadProgress.totalBytesWritten * 100) /
-        downloadProgress.totalBytesExpectedToWrite;
+        (downloadProgress.totalBytesWritten * 100) / downloadProgress.totalBytesExpectedToWrite;
 
       setProgress(progress);
     }
   );
 
   const downloadBuild = async () => {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === 'ios') {
       Linking.openURL(
         `itms-services://?action=download-manifest;url=https://api.expo.dev/v2/projects/${build?.project?.id}/builds/${build?.id}/manifest.plist`
       );
@@ -88,9 +87,9 @@ export const useDownloadBuild = ({ build }: UseDownloadBuildParams) => {
 const installAndroidBuild = async (uri: string) => {
   const cUri = await FileSystem.getContentUriAsync(uri);
 
-  await startActivityAsync("android.intent.action.VIEW", {
+  await startActivityAsync('android.intent.action.VIEW', {
     data: cUri,
-    type: "application/vnd.android.package-archive",
+    type: 'application/vnd.android.package-archive',
     flags: 1,
   });
 };

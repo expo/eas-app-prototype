@@ -3,14 +3,14 @@ import {
   FieldFunctionOptions,
   InMemoryCache,
   NormalizedCacheObject,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
-import { HttpLink } from "@apollo/client/link/http";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageWrapper, persistCache } from "apollo3-cache-persist";
-import { useEffect, useState } from "react";
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { HttpLink } from '@apollo/client/link/http';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AsyncStorageWrapper, persistCache } from 'apollo3-cache-persist';
+import { useEffect, useState } from 'react';
 
-import Config from "./Config";
+import Config from './Config';
 
 const httpLink = new HttpLink({
   uri: `${Config.api.origin}/--/graphql`,
@@ -19,18 +19,14 @@ const httpLink = new HttpLink({
 const authMiddlewareLink = setContext(() => {
   if (Config.sessionSecret) {
     return {
-      headers: { "expo-session": Config.sessionSecret },
+      headers: { 'expo-session': Config.sessionSecret },
     };
   }
 });
 
 const link = authMiddlewareLink.concat(httpLink);
 
-const mergeBasedOnOffset = (
-  existing: any[],
-  incoming: any[],
-  { args }: FieldFunctionOptions
-) => {
+const mergeBasedOnOffset = (existing: any[], incoming: any[], { args }: FieldFunctionOptions) => {
   const merged = existing ? existing.slice(0) : [];
 
   for (let i = 0; i < incoming.length; ++i) {
@@ -42,13 +38,13 @@ const mergeBasedOnOffset = (
 const cache = new InMemoryCache({
   typePolicies: {
     AppQuery: {
-      keyFields: ["byId", ["id"]],
+      keyFields: ['byId', ['id']],
     },
     App: {
-      keyFields: ["id"],
+      keyFields: ['id'],
       fields: {
         builds: {
-          keyArgs: ["limit"],
+          keyArgs: ['limit'],
           merge: mergeBasedOnOffset,
         },
       },

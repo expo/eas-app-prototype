@@ -1,13 +1,13 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
-import { BuildForBuildsListItemFragment } from "../generated/graphql";
-import ListItem from "./ListItem";
-import { DownloadStatus, useDownloadBuild } from "../hooks/useDownloadBuild";
-import CircularProgress from "./CircularProgress";
-import { lightTheme } from "@expo/styleguide-native";
-import { Text } from "expo-dev-client-components";
-import { BuildDistribution, BuildPlatform } from "../utils/builds";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { BuildForBuildsListItemFragment } from '../generated/graphql';
+import ListItem from './ListItem';
+import { DownloadStatus, useDownloadBuild } from '../hooks/useDownloadBuild';
+import CircularProgress from './CircularProgress';
+import { lightTheme } from '@expo/styleguide-native';
+import { Text } from 'expo-dev-client-components';
+import { BuildDistribution, BuildPlatform } from '../utils/builds';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 
 interface Props {
   build: BuildForBuildsListItemFragment;
@@ -23,9 +23,7 @@ const BuildsListItem = ({ build, first, last }: Props) => {
   return (
     <ListItem
       onPress={() => {
-        status === DownloadStatus.IN_PROGRESS
-          ? pauseDownload()
-          : downloadBuild();
+        status === DownloadStatus.IN_PROGRESS ? pauseDownload() : downloadBuild();
       }}
       accessoryRight={
         status === DownloadStatus.IN_PROGRESS ? (
@@ -33,19 +31,13 @@ const BuildsListItem = ({ build, first, last }: Props) => {
         ) : status === DownloadStatus.COMPLETED ? (
           <Text>Install</Text>
         ) : (
-          <Ionicons
-            name="download-outline"
-            size={24}
-            color={lightTheme.icon.default}
-          />
+          <Ionicons name="download-outline" size={24} color={lightTheme.icon.default} />
         )
       }
       first={first}
-      last={last}
-    >
+      last={last}>
       <Text>
-        {BuildPlatform[build.platform]} {BuildDistribution[build.distribution]}{" "}
-        build
+        {BuildPlatform[build.platform]} {BuildDistribution[build.distribution]} build
       </Text>
       <Text>
         {formatDistanceToNow(new Date(build.activityTimestamp), {

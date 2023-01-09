@@ -1,21 +1,13 @@
-import { useLink } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import {
-  View,
-  Text,
-  Row,
-  XIcon,
-  useExpoTheme,
-  Divider,
-  Spacer,
-} from "expo-dev-client-components";
-import { TouchableOpacity, StyleSheet, FlatList } from "react-native";
-import { borderRadius, spacing } from "@expo/styleguide-native";
+import { useLink } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { View, Text, Row, XIcon, useExpoTheme, Divider, Spacer } from 'expo-dev-client-components';
+import { TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { borderRadius, spacing } from '@expo/styleguide-native';
 
-import SectionHeader from "../components/SectionHeader";
-import { useGetCurrentUserQuery } from "../generated/graphql";
-import AccountsListItem from "../components/AccountsListItem";
-import { useUserAccount } from "../utils/UserAccountContext";
+import SectionHeader from '../components/SectionHeader';
+import { useGetCurrentUserQuery } from '../generated/graphql';
+import AccountsListItem from '../components/AccountsListItem';
+import { useUserAccount } from '../utils/UserAccountContext';
 
 const BUTTON_HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
 
@@ -25,7 +17,7 @@ const AccountModal = ({ navigation }) => {
 
   const { account: selectedAccount, setAccount } = useUserAccount();
   const { data } = useGetCurrentUserQuery({
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: 'cache-and-network',
   });
 
   const accounts = data?.viewer?.accounts;
@@ -39,10 +31,9 @@ const AccountModal = ({ navigation }) => {
         </View>
         <Row>
           <TouchableOpacity
-            onPress={() => link.push("../")}
+            onPress={() => link.push('../')}
             hitSlop={BUTTON_HIT_SLOP}
-            style={styles.xButton}
-          >
+            style={styles.xButton}>
             <XIcon />
           </TouchableOpacity>
         </Row>
@@ -64,10 +55,7 @@ const AccountModal = ({ navigation }) => {
           )}
           contentContainerStyle={styles.flatListContentContainer}
           ListHeaderComponent={
-            <SectionHeader
-              header="Switch Account"
-              style={styles.noPaddingTop}
-            />
+            <SectionHeader header="Switch Account" style={styles.noPaddingTop} />
           }
           ListFooterComponent={
             <>
@@ -81,15 +69,11 @@ const AccountModal = ({ navigation }) => {
                 style={{
                   backgroundColor: theme.button.tertiary.background,
                   padding: spacing[3],
-                  justifyContent: "center",
-                  alignItems: "center",
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   borderRadius: borderRadius.md,
-                }}
-              >
-                <Text
-                  style={{ color: theme.button.tertiary.foreground }}
-                  type="InterSemiBold"
-                >
+                }}>
+                <Text style={{ color: theme.button.tertiary.foreground }} type="InterSemiBold">
                   Log Out
                 </Text>
               </TouchableOpacity>

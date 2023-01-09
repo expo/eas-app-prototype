@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
@@ -43,7 +44,12 @@
     "@graphql-codegen/cli": "2.16.2",
     "@graphql-codegen/schema-ast": "^2.6.1",
     "@graphql-codegen/typescript-operations": "^2.5.11",
-    "@graphql-codegen/typescript-react-apollo": "^3.3.7"
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@react-native-community/eslint-config": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "prettier": "^2.8.2"
   },
   "private": true
 }

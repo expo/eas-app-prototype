@@ -1,7 +1,7 @@
-import React from "react";
-import { View } from "react-native";
-import Svg, { Circle } from "react-native-svg";
-import { lightTheme } from "@expo/styleguide-native";
+import React from 'react';
+import { View } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
+import { lightTheme } from '@expo/styleguide-native';
 
 interface Props {
   size?: number;
@@ -14,10 +14,9 @@ const CircularProgress = ({ size = 45, percentage = 0 }: Props) => {
   return (
     <View
       style={{
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       <Svg height={size} width={size} viewBox="0 0 100 100">
         <Circle
           cx="50"

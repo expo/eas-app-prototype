@@ -1,4 +1,4 @@
-import { iconSize, spacing, UsersIcon } from "@expo/styleguide-native";
+import { iconSize, spacing, UsersIcon } from '@expo/styleguide-native';
 import {
   View,
   Text,
@@ -7,10 +7,10 @@ import {
   CheckIcon,
   Spacer,
   Image,
-} from "expo-dev-client-components";
-import { TouchableOpacity } from "react-native";
+} from 'expo-dev-client-components';
+import { TouchableOpacity } from 'react-native';
 
-import { AccountFragment } from "../generated/graphql";
+import { AccountFragment } from '../generated/graphql';
 
 interface Props {
   account: AccountFragment;
@@ -20,13 +20,7 @@ interface Props {
   onPress?: () => void;
 }
 
-const AccountsListItem = ({
-  account,
-  first,
-  last,
-  onPress,
-  selected,
-}: Props) => {
+const AccountsListItem = ({ account, first, last, onPress, selected }: Props) => {
   const theme = useExpoTheme();
 
   return (
@@ -37,28 +31,17 @@ const AccountsListItem = ({
         align="center"
         bg="default"
         border="default"
-        roundedTop={first ? "large" : undefined}
-        roundedBottom={last ? "large" : undefined}
+        roundedTop={first ? 'large' : undefined}
+        roundedBottom={last ? 'large' : undefined}
         style={{
           borderBottomWidth: last ? 1 : 0,
           borderTopWidth: first ? 1 : 0,
-        }}
-      >
-        <Row flex="1" align={!account.owner?.fullName ? "center" : "start"}>
+        }}>
+        <Row flex="1" align={!account.owner?.fullName ? 'center' : 'start'}>
           {account?.owner?.profilePhoto ? (
-            <Image
-              size="xl"
-              rounded="full"
-              source={{ uri: account.owner.profilePhoto }}
-            />
+            <Image size="xl" rounded="full" source={{ uri: account.owner.profilePhoto }} />
           ) : (
-            <View
-              rounded="full"
-              height="xl"
-              width="xl"
-              bg="secondary"
-              align="centered"
-            >
+            <View rounded="full" height="xl" width="xl" bg="secondary" align="centered">
               <UsersIcon color={theme.icon.default} size={iconSize.sm} />
             </View>
           )}
@@ -68,11 +51,7 @@ const AccountsListItem = ({
               <>
                 {account.owner.fullName ? (
                   <>
-                    <Text
-                      type="InterBold"
-                      style={{ paddingRight: spacing[4] }}
-                      numberOfLines={1}
-                    >
+                    <Text type="InterBold" style={{ paddingRight: spacing[4] }} numberOfLines={1}>
                       {account.owner.fullName}
                     </Text>
                     <Spacer.Vertical size="tiny" />
@@ -81,27 +60,18 @@ const AccountsListItem = ({
                       color="secondary"
                       type="InterRegular"
                       numberOfLines={1}
-                      size="small"
-                    >
+                      size="small">
                       {account.owner.username}
                     </Text>
                   </>
                 ) : (
-                  <Text
-                    type="InterBold"
-                    style={{ paddingRight: spacing[4] }}
-                    numberOfLines={1}
-                  >
+                  <Text type="InterBold" style={{ paddingRight: spacing[4] }} numberOfLines={1}>
                     {account.owner.username}
                   </Text>
                 )}
               </>
             ) : (
-              <Text
-                type="InterBold"
-                style={{ paddingRight: spacing[4] }}
-                numberOfLines={1}
-              >
+              <Text type="InterBold" style={{ paddingRight: spacing[4] }} numberOfLines={1}>
                 {account.name}
               </Text>
             )}

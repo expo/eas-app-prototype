@@ -1,9 +1,9 @@
-import { Image, StyleSheet } from "react-native";
-import { ChevronDownIcon } from "@expo/styleguide-native";
-import { Text, useExpoTheme } from "expo-dev-client-components";
+import { Image, StyleSheet } from 'react-native';
+import { ChevronDownIcon } from '@expo/styleguide-native';
+import { Text, useExpoTheme } from 'expo-dev-client-components';
 
-import ListItem from "./ListItem";
-import { ProjectForProjectsListItemFragment } from "../generated/graphql";
+import ListItem from './ListItem';
+import { ProjectForProjectsListItemFragment } from '../generated/graphql';
 
 interface Props {
   project: ProjectForProjectsListItemFragment;
@@ -25,20 +25,19 @@ const ProjectsListItem = ({ project, onPress, first, last }: Props) => {
               ? {
                   uri: project.icon.url,
                 }
-              : require("../assets/placeholder-app-icon.png")
+              : require('../assets/placeholder-app-icon.png')
           }
           style={styles.projectIcon}
         />
       }
       accessoryRight={
         <ChevronDownIcon
-          style={{ transform: [{ rotate: "-90deg" }] }}
+          style={{ transform: [{ rotate: '-90deg' }] }}
           color={theme.icon.secondary}
         />
       }
       first={first}
-      last={last}
-    >
+      last={last}>
       <Text type="InterSemiBold" ellipsizeMode="tail" numberOfLines={1}>
         {project.name}
       </Text>
