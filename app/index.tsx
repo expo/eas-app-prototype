@@ -1,65 +1,42 @@
 import {
   FlatList,
   SafeAreaView,
-  TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
 import { Stack, useLink } from "expo-router";
-import { useState } from "react";
 import { spacing } from "@expo/styleguide-native";
-import { Text, Divider, Heading, View } from "expo-dev-client-components";
+import { Divider, Heading, View } from "expo-dev-client-components";
 
-import {
-  AccountFragment,
-  useGetAccountAppsQuery,
-  useGetCurrentUserQuery,
-} from "../generated/graphql";
+import { useGetAccountAppsQuery } from "../generated/graphql";
 import ProjectsListItem from "../components/ProjectsListItem";
+import UserAccountAvatar from "../components/UserAccountAvatar";
+import { useUserAccount } from "../utils/UserAccountContext";
 
 const Home = () => {
   const link = useLink();
-  const { data: userData } = useGetCurrentUserQuery({
-    fetchPolicy: "cache-and-network",
-    onCompleted: (data) => {
-      setSelectedAccount(data.viewer?.accounts[0]);
-    },
-  });
 
-  const [selectedAccount, setSelectedAccount] = useState<AccountFragment>();
-  const otherAccounts = userData?.viewer?.accounts?.filter(
-    ({ id }) => selectedAccount?.id !== id
-  );
-
+  const { account: selectedAccount } = useUserAccount();
   const { data, loading } = useGetAccountAppsQuery({
     variables: { accountId: selectedAccount?.id, offset: 0, limit: 30 },
     skip: !selectedAccount,
   });
+
   const apps = data?.account?.byId?.apps;
 
   return (
     <SafeAreaView style={styles.flex}>
-      <Stack.Screen options={{ title: "EAS Prototype" }} />
+      <Stack.Screen
+        options={{
+          title: "EAS Prototype",
+          headerRight: () => <UserAccountAvatar />,
+        }}
+      />
       <View padding="medium">
-        <View style={styles.accounts}>
-          <Text>
-            Current Account:{" "}
-            <Text style={styles.highlightedText}>{selectedAccount?.name}</Text>
-          </Text>
-          <Text style={styles.changeAccount}>Change account:</Text>
-          {otherAccounts?.map((account) => (
-            <TouchableOpacity
-              key={account.id}
-              onPress={() => setSelectedAccount(account)}
-            >
-              <Text style={styles.accountText}>{account.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
         <Heading
           color="secondary"
           size="small"
-          style={{ marginRight: spacing[2] }}
+          style={styles.heading}
           type="InterSemiBold"
         >
           Projects
@@ -90,6 +67,9 @@ export default Home;
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
+  },
+  heading: {
+    marginRight: spacing[2],
   },
   projectIcon: {
     height: 47,
