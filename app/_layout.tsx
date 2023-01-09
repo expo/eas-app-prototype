@@ -10,6 +10,7 @@ import { UserAccountProvider } from '../utils/UserAccountContext';
 export default function Layout() {
   const { client } = useApolloClient();
   const [fontsLoaded] = useFonts({
+    'Inter-Bold': require('../assets/Inter/Inter-Bold.otf'),
     'Inter-Regular': require('../assets/Inter/Inter-Regular.otf'),
     'Inter-SemiBold': require('../assets/Inter/Inter-SemiBold.otf'),
   });
