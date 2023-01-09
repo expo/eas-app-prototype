@@ -14,6 +14,7 @@ export default function Layout() {
   const theme = useExpoTheme();
   const [fontsLoaded] = useFonts({
     'Inter-Bold': require('../assets/Inter/Inter-Bold.otf'),
+    'Inter-Medium': require('../assets/Inter/Inter-Medium.otf'),
     'Inter-Regular': require('../assets/Inter/Inter-Regular.otf'),
     'Inter-SemiBold': require('../assets/Inter/Inter-SemiBold.otf'),
   });

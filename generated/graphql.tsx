@@ -4766,6 +4766,7 @@ export type GetAppBuildsQueryVariables = Exact<{
   appId: Scalars['String'];
   offset: Scalars['Int'];
   limit: Scalars['Int'];
+  platform?: InputMaybe<AppPlatform>;
 }>;
 
 
@@ -4854,12 +4855,12 @@ export const CurrentUserDataFragmentDoc = gql`
 }
     ${AccountFragmentDoc}`;
 export const GetAppBuildsDocument = gql`
-    query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!) {
+    query GetAppBuilds($appId: String!, $offset: Int!, $limit: Int!, $platform: AppPlatform) {
   app {
     byId(appId: $appId) {
       id
       name
-      builds(limit: $limit, offset: $offset) {
+      builds(limit: $limit, offset: $offset, status: FINISHED, platform: $platform) {
         ...BuildForBuildsListItem
       }
     }
@@ -4882,6 +4883,7 @@ export const GetAppBuildsDocument = gql`
  *      appId: // value for 'appId'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      platform: // value for 'platform'
  *   },
  * });
  */

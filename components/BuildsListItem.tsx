@@ -8,6 +8,7 @@ import { lightTheme } from '@expo/styleguide-native';
 import { Text } from 'expo-dev-client-components';
 import { BuildDistribution, BuildPlatform } from '../utils/builds';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import Chip from './Chip';
 
 interface Props {
   build: BuildForBuildsListItemFragment;
@@ -28,7 +29,7 @@ const BuildsListItem = ({ build, first, last, showProjectName }: Props) => {
         status === DownloadStatus.IN_PROGRESS ? (
           <CircularProgress percentage={progress} size={28} />
         ) : status === DownloadStatus.COMPLETED ? (
-          <Text>{label}</Text>
+          <Chip theme="secondary" label={label} />
         ) : (
           <Ionicons name="download-outline" size={24} color={lightTheme.icon.default} />
         )

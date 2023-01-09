@@ -1,16 +1,18 @@
-import { FlatList, ActivityIndicator, StyleSheet, RefreshControl } from 'react-native';
+import { FlatList, ActivityIndicator, StyleSheet, RefreshControl, Platform } from 'react-native';
 import { Stack } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { spacing } from '@expo/styleguide-native';
-
-import { useGetAppBuildsQuery } from '../../generated/graphql';
-import BuildsListItem from '../../components/BuildsListItem';
-import { Divider, Heading, View } from 'expo-dev-client-components';
+import { Divider, Heading, View, Row, Text } from 'expo-dev-client-components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NetworkStatus } from '@apollo/client';
+
+import { AppPlatform, useGetAppBuildsQuery } from '../../generated/graphql';
+import BuildsListItem from '../../components/BuildsListItem';
 import ListItem from '../../components/ListItem';
 import SideLoadingChecker from '../../components/SideLoadingChecker';
 import { useThrottle } from '../../hooks/useThrottle';
-import { NetworkStatus } from '@apollo/client';
+import { useResettableState } from '../../hooks/useResettableState';
+import Chip from '../../components/Chip';
 
 const PAGE_LIMIT = 15;
 
@@ -18,16 +20,26 @@ const Project = ({ route }) => {
   const { id } = route.params;
   const insets = useSafeAreaInsets();
 
-  const { data, loading, fetchMore, networkStatus, refetch } = useGetAppBuildsQuery({
-    fetchPolicy: 'cache-and-network',
-    variables: {
+  const [selectedPlatform, setSelectedPlatform] = useState<AppPlatform>(
+    Platform.OS.toUpperCase() as AppPlatform
+  );
+
+  const variables = useMemo(
+    () => ({
       appId: id,
       limit: PAGE_LIMIT,
       offset: 0,
-    },
+      platform: selectedPlatform,
+    }),
+    [id, selectedPlatform]
+  );
+
+  const { data, loading, fetchMore, networkStatus, refetch } = useGetAppBuildsQuery({
+    fetchPolicy: 'cache-and-network',
+    variables,
     notifyOnNetworkStatusChange: true,
   });
-  const [hasMoreResults, setHasMoreResults] = useState(true);
+  const [hasMoreResults, setHasMoreResults] = useResettableState(true, variables);
 
   const app = data?.app?.byId;
   const builds = app?.builds;
@@ -59,9 +71,31 @@ const Project = ({ route }) => {
         data={builds}
         onEndReached={onEndReached}
         ListHeaderComponent={
-          <Heading color="secondary" size="large" style={styles.heading} type="InterSemiBold">
-            Builds
-          </Heading>
+          <>
+            <Heading color="secondary" size="large" style={styles.heading} type="InterSemiBold">
+              Builds
+            </Heading>
+            <Row align="start" mb="medium">
+              <Chip
+                style={styles.chip}
+                onPress={() => setSelectedPlatform(null)}
+                label="All"
+                selected={selectedPlatform === null}
+              />
+              <Chip
+                style={styles.chip}
+                onPress={() => setSelectedPlatform(AppPlatform.Android)}
+                label="Android"
+                selected={selectedPlatform === AppPlatform.Android}
+              />
+              <Chip
+                style={styles.chip}
+                onPress={() => setSelectedPlatform(AppPlatform.Ios)}
+                label="iOS"
+                selected={selectedPlatform === AppPlatform.Ios}
+              />
+            </Row>
+          </>
         }
         contentContainerStyle={[
           styles.contentContainer,
@@ -86,6 +120,13 @@ const Project = ({ route }) => {
             </>
           )
         }
+        ListEmptyComponent={
+          !loading && (
+            <View bg="default" padding="medium" rounded="large" border="default">
+              <Text>No builds found</Text>
+            </View>
+          )
+        }
       />
     </View>
   );
@@ -105,5 +146,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     marginBottom: spacing[2],
+  },
+  chip: {
+    marginRight: spacing[2],
   },
 });
