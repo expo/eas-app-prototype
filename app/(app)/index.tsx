@@ -13,14 +13,15 @@ import {
   BuildForBuildsListItemFragment,
   ProjectForProjectsListItemFragment,
   useGetAccountAppsAndBuildsQuery,
-} from '../generated/graphql';
-import ProjectsListItem from '../components/ProjectsListItem';
-import UserAccountAvatar from '../components/UserAccountAvatar';
-import { useUserAccount } from '../utils/UserAccountContext';
-import BuildsListItem from '../components/BuildsListItem';
+  useGetCurrentUserQuery,
+} from '../../generated/graphql';
+import ProjectsListItem from '../../components/ProjectsListItem';
+import UserAccountAvatar from '../../components/UserAccountAvatar';
+import { useUserAccount } from '../../utils/UserAccountContext';
+import BuildsListItem from '../../components/BuildsListItem';
 import { useMemo, useState } from 'react';
 import { NetworkStatus } from '@apollo/client';
-import { useThrottle } from '../hooks/useThrottle';
+import { useThrottle } from '../../hooks/useThrottle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const PAGE_LIMIT = 15;
@@ -29,7 +30,18 @@ const Home = () => {
   const link = useLink();
   const insets = useSafeAreaInsets();
 
-  const { account: selectedAccount } = useUserAccount();
+  const { account: selectedAccount, setAccount } = useUserAccount();
+
+  useGetCurrentUserQuery({
+    nextFetchPolicy: 'cache-and-network',
+    onCompleted: (data) => {
+      if (data?.viewer?.accounts?.[0]) {
+        setAccount(data.viewer.accounts[0]);
+      }
+    },
+    skip: Boolean(selectedAccount),
+  });
+
   const { data, loading, fetchMore, refetch, networkStatus } = useGetAccountAppsAndBuildsQuery({
     variables: { accountId: selectedAccount?.id, offset: 0, limit: PAGE_LIMIT },
     notifyOnNetworkStatusChange: true,
@@ -124,7 +136,7 @@ const Home = () => {
           ) : null
         }
         ListEmptyComponent={
-          loading || true ? (
+          loading ? (
             <View padding="medium" flex="1" align="centered">
               <ActivityIndicator size="small" />
             </View>

@@ -16,16 +16,6 @@ const httpLink = new HttpLink({
   uri: `${Config.api.origin}/--/graphql`,
 });
 
-const authMiddlewareLink = setContext(() => {
-  if (Config.sessionSecret) {
-    return {
-      headers: { 'expo-session': Config.sessionSecret },
-    };
-  }
-});
-
-const link = authMiddlewareLink.concat(httpLink);
-
 const mergeBasedOnOffset = (existing: any[], incoming: any[], { args }: FieldFunctionOptions) => {
   const merged = existing ? existing.slice(0) : [];
 
@@ -63,7 +53,10 @@ const cache = new InMemoryCache({
   },
 });
 
-export const useApolloClient = () => {
+interface UseApolloClientParams {
+  sessionSecret: string;
+}
+export const useApolloClient = ({ sessionSecret }: UseApolloClientParams) => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
 
   useEffect(() => {
@@ -71,18 +64,27 @@ export const useApolloClient = () => {
       await persistCache({
         cache,
         storage: new AsyncStorageWrapper(AsyncStorage),
+        key: 'apollo-cache-persist',
+      });
+
+      const authMiddlewareLink = setContext(() => {
+        if (sessionSecret) {
+          return {
+            headers: { 'expo-session': sessionSecret },
+          };
+        }
       });
 
       setClient(
         new ApolloClient({
-          link,
+          link: authMiddlewareLink.concat(httpLink),
           cache,
         })
       );
     }
 
     init();
-  }, []);
+  }, [sessionSecret]);
 
   return {
     client,

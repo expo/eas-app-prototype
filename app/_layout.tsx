@@ -1,17 +1,28 @@
-import { Stack } from 'expo-router';
 import { ApolloProvider } from '@apollo/client';
-import React, { useEffect } from 'react';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-
-import { useApolloClient } from '../api/ApolloClient';
-import { UserAccountProvider } from '../utils/UserAccountContext';
-import { StatusBar } from 'react-native';
 import { useExpoTheme } from 'expo-dev-client-components';
+import { useFonts } from 'expo-font';
+import { Layout, SplashScreen } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import { useApolloClient } from '../api/ApolloClient';
 
-export default function Layout() {
-  const { client } = useApolloClient();
+import { UserAccountProvider, useUserAccount } from '../utils/UserAccountContext';
+
+export default function Root() {
   const theme = useExpoTheme();
+
+  return (
+    <UserAccountProvider>
+      <StatusBar backgroundColor={theme.background.default} translucent={false} />
+      <RootLayout />
+    </UserAccountProvider>
+  );
+}
+
+function RootLayout() {
+  const { sessionSecret } = useUserAccount();
+  const { client } = useApolloClient({ sessionSecret });
+
   const [fontsLoaded] = useFonts({
     'Inter-Bold': require('../assets/Inter/Inter-Bold.otf'),
     'Inter-Medium': require('../assets/Inter/Inter-Medium.otf'),
@@ -20,10 +31,10 @@ export default function Layout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
+    if (client) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [client]);
 
   if (!fontsLoaded || !client) {
     return null;
@@ -31,23 +42,11 @@ export default function Layout() {
 
   return (
     <ApolloProvider client={client}>
-      <UserAccountProvider>
-        <StatusBar backgroundColor={theme.background.default} translucent={false} />
-        <Stack
-          screenOptions={{
-            headerBackTitleVisible: false,
-            animation: 'slide_from_right',
-          }}>
-          <Stack.Screen
-            name="account"
-            options={{
-              presentation: 'modal',
-              headerShown: false,
-              animation: 'slide_from_bottom',
-            }}
-          />
-        </Stack>
-      </UserAccountProvider>
+      <Layout>
+        <Layout.Screen name="(app)" redirect={!sessionSecret} />
+        <Layout.Screen name="(login)" redirect={Boolean(sessionSecret)} />
+        <Layout.Children />
+      </Layout>
     </ApolloProvider>
   );
 }
