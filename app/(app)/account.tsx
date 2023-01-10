@@ -3,19 +3,22 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, Row, XIcon, useExpoTheme, Divider, Spacer } from 'expo-dev-client-components';
 import { TouchableOpacity, StyleSheet, FlatList, Platform, SafeAreaView } from 'react-native';
 import { borderRadius, spacing } from '@expo/styleguide-native';
+import { useApolloClient } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import SectionHeader from '../components/SectionHeader';
-import { useGetCurrentUserQuery } from '../generated/graphql';
-import AccountsListItem from '../components/AccountsListItem';
-import { useUserAccount } from '../utils/UserAccountContext';
+import SectionHeader from '../../components/SectionHeader';
+import { useGetCurrentUserQuery } from '../../generated/graphql';
+import AccountsListItem from '../../components/AccountsListItem';
+import { useUserAccount } from '../../utils/UserAccountContext';
 
 const BUTTON_HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
 
 const AccountModal = ({ navigation }) => {
   const theme = useExpoTheme();
   const link = useLink();
+  const client = useApolloClient();
 
-  const { account: selectedAccount, setAccount } = useUserAccount();
+  const { account: selectedAccount, setAccount, setSessionSecret } = useUserAccount();
   const { data } = useGetCurrentUserQuery({
     fetchPolicy: 'cache-and-network',
   });
@@ -24,7 +27,7 @@ const AccountModal = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.flex}>
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      {Platform.OS === 'ios' ? <StatusBar style={'light'} /> : null}
       <Row justify="between" align="center">
         <View padding="medium">
           <Text type="InterBold">Account</Text>
@@ -62,8 +65,10 @@ const AccountModal = ({ navigation }) => {
               <Spacer.Vertical size="large" />
               <SectionHeader header="Log Out" style={styles.noPaddingTop} />
               <TouchableOpacity
-                onPress={() => {
-                  // TODO: Implement logout logic
+                onPress={async () => {
+                  await AsyncStorage.removeItem('apollo-cache-persist');
+                  await client.cache.reset();
+                  setSessionSecret(null);
                   setAccount(null);
                 }}
                 style={{

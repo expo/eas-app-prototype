@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, createContext, useContext, useEffect } from 'react';
-import { AccountFragment, useGetCurrentUserQuery } from '../generated/graphql';
+import React, { useState, createContext, useContext, useEffect, useMemo } from 'react';
+import { AccountFragment } from '../generated/graphql';
 
 type AccountNameContextValue = {
   account?: AccountFragment;
+  sessionSecret?: string;
   setAccount: (account?: AccountFragment) => void;
+  setSessionSecret: (sessionSecret?: string) => void;
 };
 
 const UserAccountContext = createContext<AccountNameContextValue | null>(null);
@@ -21,13 +23,11 @@ export function useUserAccount() {
 
 export function UserAccountProvider({ children }: { children: React.ReactNode }) {
   const [account, setAccount] = useState<AccountFragment>(undefined);
-  useGetCurrentUserQuery({
-    fetchPolicy: 'cache-and-network',
-    onCompleted: (data) => {
-      setAccount(data.viewer?.accounts[0]);
-    },
-    skip: account === undefined,
-  });
+  const [sessionSecret, setSessionSecret] = useState<string>(undefined);
+
+  useEffect(() => {
+    AsyncStorage.getItem('sessionSecret').then(setSessionSecret);
+  }, []);
 
   useEffect(() => {
     const loadAccount = async () => {
@@ -47,13 +47,22 @@ export function UserAccountProvider({ children }: { children: React.ReactNode })
     }
   }, [account]);
 
+  useEffect(() => {
+    if (sessionSecret) {
+      AsyncStorage.setItem('sessionSecret', sessionSecret);
+    } else {
+      AsyncStorage.removeItem('sessionSecret');
+    }
+  }, [sessionSecret]);
+
+  const value = useMemo(
+    () => ({ account, sessionSecret, setAccount, setSessionSecret }),
+    [account, sessionSecret]
+  );
+
   if (account === undefined) {
     return null;
   }
 
-  return (
-    <UserAccountContext.Provider value={{ account, setAccount }}>
-      {children}
-    </UserAccountContext.Provider>
-  );
+  return <UserAccountContext.Provider value={value}>{children}</UserAccountContext.Provider>;
 }

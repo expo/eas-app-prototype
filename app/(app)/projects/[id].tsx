@@ -6,13 +6,13 @@ import { Divider, Heading, View, Row, Text } from 'expo-dev-client-components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NetworkStatus } from '@apollo/client';
 
-import { AppPlatform, useGetAppBuildsQuery } from '../../generated/graphql';
-import BuildsListItem from '../../components/BuildsListItem';
-import ListItem from '../../components/ListItem';
-import SideLoadingChecker from '../../components/SideLoadingChecker';
-import { useThrottle } from '../../hooks/useThrottle';
-import { useResettableState } from '../../hooks/useResettableState';
-import Chip from '../../components/Chip';
+import { AppPlatform, useGetAppBuildsQuery } from '../../../generated/graphql';
+import BuildsListItem from '../../../components/BuildsListItem';
+import ListItem from '../../../components/ListItem';
+import SideLoadingChecker from '../../../components/SideLoadingChecker';
+import { useThrottle } from '../../../hooks/useThrottle';
+import { useResettableState } from '../../../hooks/useResettableState';
+import Chip from '../../../components/Chip';
 
 const PAGE_LIMIT = 15;
 
