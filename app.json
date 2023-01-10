@@ -14,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/2f0355ff-c815-4e2d-9e8c-75599bc332b3"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -22,7 +23,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.gabrieldonadel.easappprototype",
-      "buildNumber": "2"
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,7 +34,7 @@
       "permissions": [
         "android.permission.REQUEST_INSTALL_PACKAGES"
       ],
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,6 +43,9 @@
       "eas": {
         "projectId": "2f0355ff-c815-4e2d-9e8c-75599bc332b3"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
