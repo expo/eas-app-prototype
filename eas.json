@@ -8,9 +8,12 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "autoIncrement": true
     },
-    "production": {},
+    "production": {
+      "autoIncrement": true
+    },
     "development-simulator": {
       "developmentClient": true,
       "distribution": "internal",
