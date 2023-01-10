@@ -16,10 +16,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gabrieldonadel.easappprototype"
+      "bundleIdentifier": "com.gabrieldonadel.easappprototype",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +30,10 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.gabrieldonadel.easappprototype",
-      "permissions": ["android.permission.REQUEST_INSTALL_PACKAGES"]
+      "permissions": [
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ],
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
