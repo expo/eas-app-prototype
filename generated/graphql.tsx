@@ -4910,7 +4910,7 @@ export const GetAccountAppsAndBuildsDocument = gql`
         id
         ...ProjectForProjectsListItem
       }
-      builds(limit: 3, offset: 0) {
+      builds(limit: 3, offset: 0, status: FINISHED) {
         id
         ...BuildForBuildsListItem
       }
