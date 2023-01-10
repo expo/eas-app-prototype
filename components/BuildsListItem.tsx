@@ -9,6 +9,7 @@ import { Text } from 'expo-dev-client-components';
 import { BuildDistribution, BuildPlatform } from '../utils/builds';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import Chip from './Chip';
+import { TouchableOpacity } from 'react-native';
 
 interface Props {
   build: BuildForBuildsListItemFragment;
@@ -24,14 +25,17 @@ const BuildsListItem = ({ build, first, last, showProjectName }: Props) => {
 
   return (
     <ListItem
-      onPress={toggleDownload}
       accessoryRight={
-        status === DownloadStatus.IN_PROGRESS ? (
-          <CircularProgress percentage={progress} size={28} />
-        ) : status === DownloadStatus.COMPLETED ? (
-          <Chip theme="secondary" label={label} />
+        status === DownloadStatus.COMPLETED ? (
+          <Chip theme="secondary" label={label} onPress={toggleDownload} />
         ) : (
-          <Ionicons name="download-outline" size={24} color={lightTheme.icon.default} />
+          <TouchableOpacity onPress={toggleDownload}>
+            {status === DownloadStatus.IN_PROGRESS ? (
+              <CircularProgress percentage={progress} size={28} />
+            ) : (
+              <Ionicons name="download-outline" size={24} color={lightTheme.icon.default} />
+            )}
+          </TouchableOpacity>
         )
       }
       first={first}
@@ -41,6 +45,7 @@ const BuildsListItem = ({ build, first, last, showProjectName }: Props) => {
         {BuildPlatform[build.platform]} {BuildDistribution[build.distribution]} build
       </Text>
       <Text type="InterRegular" size="small">
+        {build.appVersion} ({build.appBuildVersion}) -{' '}
         {formatDistanceToNow(new Date(build.activityTimestamp), {
           addSuffix: true,
         })}

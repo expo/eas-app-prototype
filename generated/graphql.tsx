@@ -4760,7 +4760,7 @@ export type DeleteApplePushKeyResult = {
 
 export type BuildForUseDownloadBuildFragment = { __typename?: 'Build', id: string, platform: AppPlatform, distribution?: DistributionType | null, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null, project: { __typename?: 'App', id: string, slug: string } | { __typename?: 'Snack', id: string, slug: string } };
 
-export type BuildForBuildsListItemFragment = { __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, project: { __typename?: 'App', id: string, name: string, slug: string } | { __typename?: 'Snack', id: string, name: string, slug: string }, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null };
+export type BuildForBuildsListItemFragment = { __typename?: 'Build', id: string, activityTimestamp: any, appVersion?: string | null, appBuildVersion?: string | null, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, project: { __typename?: 'App', id: string, name: string, slug: string } | { __typename?: 'Snack', id: string, name: string, slug: string }, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null };
 
 export type GetAppBuildsQueryVariables = Exact<{
   appId: Scalars['String'];
@@ -4770,7 +4770,7 @@ export type GetAppBuildsQueryVariables = Exact<{
 }>;
 
 
-export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, project: { __typename?: 'App', id: string, name: string, slug: string } | { __typename?: 'Snack', id: string, name: string, slug: string }, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
+export type GetAppBuildsQuery = { __typename?: 'RootQuery', app: { __typename?: 'AppQuery', byId: { __typename?: 'App', id: string, name: string, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, appVersion?: string | null, appBuildVersion?: string | null, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, project: { __typename?: 'App', id: string, name: string, slug: string } | { __typename?: 'Snack', id: string, name: string, slug: string }, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
 
 export type ProjectForProjectsListItemFragment = { __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null };
 
@@ -4781,7 +4781,7 @@ export type GetAccountAppsAndBuildsQueryVariables = Exact<{
 }>;
 
 
-export type GetAccountAppsAndBuildsQuery = { __typename?: 'RootQuery', account: { __typename?: 'AccountQuery', byId: { __typename?: 'Account', id: string, name: string, apps: Array<{ __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null }>, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, project: { __typename?: 'App', id: string, name: string, slug: string } | { __typename?: 'Snack', id: string, name: string, slug: string }, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
+export type GetAccountAppsAndBuildsQuery = { __typename?: 'RootQuery', account: { __typename?: 'AccountQuery', byId: { __typename?: 'Account', id: string, name: string, apps: Array<{ __typename?: 'App', id: string, name: string, icon?: { __typename?: 'AppIcon', url: string } | null }>, builds: Array<{ __typename?: 'Build', id: string, activityTimestamp: any, appVersion?: string | null, appBuildVersion?: string | null, platform: AppPlatform, distribution?: DistributionType | null, status: BuildStatus, project: { __typename?: 'App', id: string, name: string, slug: string } | { __typename?: 'Snack', id: string, name: string, slug: string }, artifacts?: { __typename?: 'BuildArtifacts', buildUrl?: string | null } | null }> } } };
 
 export type AccountFragment = { __typename?: 'Account', id: string, name: string, owner?: { __typename?: 'User', id: string, username: string, profilePhoto: string, firstName?: string | null, fullName?: string | null, lastName?: string | null } | null };
 
@@ -4811,6 +4811,8 @@ export const BuildForBuildsListItemFragmentDoc = gql`
   id
   ...BuildForUseDownloadBuild
   activityTimestamp
+  appVersion
+  appBuildVersion
   platform
   distribution
   status
