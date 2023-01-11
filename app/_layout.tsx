@@ -29,10 +29,10 @@ function RootLayout() {
   const { client } = useApolloClient({ sessionSecret });
 
   const [fontsLoaded] = useFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
+    'Inter-Bold': Inter_700Bold,
+    'Inter-Medium': Inter_500Medium,
+    'Inter-Regular': Inter_400Regular,
+    'Inter-SemiBold': Inter_600SemiBold,
   });
 
   if (!fontsLoaded || !client) {
