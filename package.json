@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
+    "@expo-google-fonts/inter": "^0.2.2",
     "@expo/styleguide-native": "^6.1.0",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@types/react": "~18.0.24",
