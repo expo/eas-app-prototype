@@ -1,20 +1,21 @@
 import { useLink } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, Row, XIcon, useExpoTheme, Divider, Spacer } from 'expo-dev-client-components';
+import { View, Text, Row, XIcon, Divider, Spacer } from 'expo-dev-client-components';
 import { TouchableOpacity, StyleSheet, FlatList, Platform, SafeAreaView } from 'react-native';
-import { borderRadius, spacing } from '@expo/styleguide-native';
+import { spacing } from '@expo/styleguide-native';
 import { useApolloClient } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import SectionHeader from '../../components/SectionHeader';
-import { useGetCurrentUserQuery } from '../../generated/graphql';
-import AccountsListItem from '../../components/AccountsListItem';
-import { useUserAccount } from '../../utils/UserAccountContext';
+import SectionHeader from '../../../components/SectionHeader';
+import { useGetCurrentUserQuery } from '../../../generated/graphql';
+import AccountsListItem from '../../../components/AccountsListItem';
+import { useUserAccount } from '../../../utils/UserAccountContext';
+import InternalDistributionPrompt from '../../../components/InternalDistributionPrompt';
+import { Button } from '../../../components/Button';
 
 const BUTTON_HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
 
 const AccountModal = ({ navigation }) => {
-  const theme = useExpoTheme();
   const link = useLink();
   const client = useApolloClient();
 
@@ -62,26 +63,30 @@ const AccountModal = ({ navigation }) => {
           }
           ListFooterComponent={
             <>
-              <Spacer.Vertical size="large" />
-              <SectionHeader header="Log Out" style={styles.noPaddingTop} />
-              <TouchableOpacity
+              <Spacer.Vertical size="small" />
+              {/* <InternalDistributionPrompt /> */}
+
+              <SectionHeader header="Set up device for internal distribution" />
+              <Button
+                label="Register device"
+                onPress={() => {
+                  link.push('account/register-device');
+                }}
+                style={{
+                  alignItems: 'center',
+                }}
+              />
+              <SectionHeader header="Log Out" />
+              <Button
+                label="Log Out"
                 onPress={async () => {
                   await AsyncStorage.removeItem('apollo-cache-persist');
                   await client.cache.reset();
                   setSessionSecret(null);
                   setAccount(null);
                 }}
-                style={{
-                  backgroundColor: theme.button.tertiary.background,
-                  padding: spacing[3],
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: borderRadius.md,
-                }}>
-                <Text style={{ color: theme.button.tertiary.foreground }} type="InterSemiBold">
-                  Log Out
-                </Text>
-              </TouchableOpacity>
+                style={styles.logoutButton}
+              />
             </>
           }
           ItemSeparatorComponent={() => <Divider style={styles.divider} />}
@@ -110,5 +115,8 @@ const styles = StyleSheet.create({
   },
   flatListContentContainer: {
     padding: spacing[4],
+  },
+  logoutButton: {
+    alignItems: 'center',
   },
 });

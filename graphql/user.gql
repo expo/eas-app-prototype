@@ -26,3 +26,12 @@ query GetCurrentUser {
     ...CurrentUserData
   }
 }
+
+mutation CreateAppleDeviceRegistrationRequest($appleTeamId: ID!, $accountId: ID!) {
+  appleDeviceRegistrationRequest {
+    createAppleDeviceRegistrationRequest(appleTeamId: $appleTeamId, accountId: $accountId) {
+      id
+      ...AppleDeviceRegistrationRequestFragment
+    }
+  }
+}
