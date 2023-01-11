@@ -1,10 +1,15 @@
 import { ApolloProvider } from '@apollo/client';
 import { useExpoTheme } from 'expo-dev-client-components';
-import { useFonts } from 'expo-font';
-import { Layout, SplashScreen } from 'expo-router';
+import { Layout } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import { useApolloClient } from '../api/ApolloClient';
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
 
 import { UserAccountProvider, useUserAccount } from '../utils/UserAccountContext';
 
@@ -24,17 +29,11 @@ function RootLayout() {
   const { client } = useApolloClient({ sessionSecret });
 
   const [fontsLoaded] = useFonts({
-    'Inter-Bold': require('../assets/Inter/Inter-Bold.otf'),
-    'Inter-Medium': require('../assets/Inter/Inter-Medium.otf'),
-    'Inter-Regular': require('../assets/Inter/Inter-Regular.otf'),
-    'Inter-SemiBold': require('../assets/Inter/Inter-SemiBold.otf'),
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
   });
-
-  useEffect(() => {
-    if (client) {
-      SplashScreen.hideAsync();
-    }
-  }, [client]);
 
   if (!fontsLoaded || !client) {
     return null;
