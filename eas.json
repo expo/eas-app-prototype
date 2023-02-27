@@ -25,6 +25,13 @@
         "simulator": true
       },
       "channel": "development-simulator"
+    },
+    "preview-simulator": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      },
+      "channel": "preview-simulator"
     }
   },
   "submit": {
