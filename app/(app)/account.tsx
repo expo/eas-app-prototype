@@ -1,4 +1,4 @@
-import { useLink } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, Row, XIcon, useExpoTheme, Divider, Spacer } from 'expo-dev-client-components';
 import { TouchableOpacity, StyleSheet, FlatList, Platform, SafeAreaView } from 'react-native';
@@ -13,9 +13,9 @@ import { useUserAccount } from '../../utils/UserAccountContext';
 
 const BUTTON_HIT_SLOP = { top: 8, bottom: 8, left: 8, right: 8 };
 
-const AccountModal = ({ navigation }) => {
+const AccountModal = () => {
   const theme = useExpoTheme();
-  const link = useLink();
+  const router = useRouter();
   const client = useApolloClient();
 
   const { account: selectedAccount, setAccount, setSessionSecret } = useUserAccount();
@@ -34,7 +34,7 @@ const AccountModal = ({ navigation }) => {
         </View>
         <Row>
           <TouchableOpacity
-            onPress={() => link.push('../')}
+            onPress={() => router.push('../')}
             hitSlop={BUTTON_HIT_SLOP}
             style={styles.xButton}>
             <XIcon />
@@ -52,7 +52,7 @@ const AccountModal = ({ navigation }) => {
               selected={item.id === selectedAccount?.id}
               onPress={() => {
                 setAccount(item);
-                navigation.goBack();
+                router.back();
               }}
             />
           )}

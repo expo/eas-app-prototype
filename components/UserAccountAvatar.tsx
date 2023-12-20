@@ -1,17 +1,16 @@
 import { iconSize, UsersIcon } from '@expo/styleguide-native';
 import { Button, View, Image, useExpoTheme } from 'expo-dev-client-components';
-import { useLink } from 'expo-router';
+import { router } from 'expo-router';
 import * as React from 'react';
 import { useUserAccount } from '../utils/UserAccountContext';
 
 const UserAccountAvatar = () => {
   const theme = useExpoTheme();
-  const link = useLink();
 
   const { account } = useUserAccount();
 
   return (
-    <Button.Container onPress={() => link.push('/account')}>
+    <Button.Container onPress={() => router.push('/account')}>
       {account?.owner?.profilePhoto ? (
         <Image size="xl" rounded="full" source={{ uri: account.owner.profilePhoto }} />
       ) : (
