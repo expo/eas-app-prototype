@@ -1,5 +1,5 @@
 import { FlatList, ActivityIndicator, StyleSheet, RefreshControl, Platform } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { spacing } from '@expo/styleguide-native';
 import { Divider, Heading, View, Row, Text } from 'expo-dev-client-components';
@@ -16,8 +16,8 @@ import Chip from '../../../components/Chip';
 
 const PAGE_LIMIT = 15;
 
-const Project = ({ route }) => {
-  const { id } = route.params;
+const Project = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
 
   const [selectedPlatform, setSelectedPlatform] = useState<AppPlatform>(

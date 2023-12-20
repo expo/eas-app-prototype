@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/2f0355ff-c815-4e2d-9e8c-75599bc332b3"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.gabrieldonadel.easappprototype",
@@ -31,9 +29,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.gabrieldonadel.easappprototype",
-      "permissions": [
-        "android.permission.REQUEST_INSTALL_PACKAGES"
-      ],
+      "permissions": ["android.permission.REQUEST_INSTALL_PACKAGES"],
       "versionCode": 4
     },
     "web": {

@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import { useExpoTheme } from 'expo-dev-client-components';
-import { Layout } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useApolloClient } from '../api/ApolloClient';
 import {
@@ -41,11 +41,10 @@ function RootLayout() {
 
   return (
     <ApolloProvider client={client}>
-      <Layout>
-        <Layout.Screen name="(app)" redirect={!sessionSecret} />
-        <Layout.Screen name="(login)" redirect={Boolean(sessionSecret)} />
-        <Layout.Children />
-      </Layout>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(app)" redirect={!sessionSecret} />
+        <Stack.Screen name="(login)" redirect={Boolean(sessionSecret)} />
+      </Stack>
     </ApolloProvider>
   );
 }

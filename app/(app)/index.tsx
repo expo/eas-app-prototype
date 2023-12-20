@@ -5,7 +5,7 @@ import {
   RefreshControl,
   ActivityIndicator,
 } from 'react-native';
-import { Stack, useLink } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { spacing } from '@expo/styleguide-native';
 import { Divider, Heading, View } from 'expo-dev-client-components';
 
@@ -27,7 +27,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const PAGE_LIMIT = 15;
 
 const Home = () => {
-  const link = useLink();
   const insets = useSafeAreaInsets();
 
   const { account: selectedAccount, setAccount } = useUserAccount();
@@ -100,7 +99,7 @@ const Home = () => {
         renderItem={({ item, index, section }) =>
           item.__typename === 'App' ? (
             <ProjectsListItem
-              onPress={() => link.push(`/projects/${item.id}`)}
+              onPress={() => router.push(`/projects/${item.id}`)}
               first={index === 0}
               last={index === section.data?.length - 1}
               project={item}
