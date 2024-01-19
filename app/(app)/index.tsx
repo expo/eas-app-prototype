@@ -70,7 +70,7 @@ const Home = () => {
   }, [apps, builds]);
 
   const onEndReached = async () => {
-    if (loading || !hasMoreResults) {
+    if (loading || !hasMoreResults || !apps?.length) {
       return;
     }
 
