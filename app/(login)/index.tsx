@@ -1,34 +1,43 @@
 import { spacing } from '@expo/styleguide-native';
-import { Heading, TextInput, useExpoTheme, View } from 'expo-dev-client-components';
-import { useState } from 'react';
+import { View, Text } from 'expo-dev-client-components';
+import * as WebBrowser from 'expo-web-browser';
 
 import { Button } from '../../components/Button';
 import { useUserAccount } from '../../utils/UserAccountContext';
 
 const Login = () => {
   const { setSessionSecret } = useUserAccount();
-  const theme = useExpoTheme();
 
-  const [secret, setSecret] = useState('');
+  const promptLogin = async (type: 'login' | 'signup') => {
+    const redirectBase = 'exp+eas-app-prototype://auth';
+    const authSessionURL = `https://expo.dev/${type}?confirm_account=1&app_redirect_uri=${encodeURIComponent(
+      redirectBase
+    )}`;
+    const result = await WebBrowser.openAuthSessionAsync(authSessionURL, redirectBase, {
+      showInRecents: true,
+    });
+
+    if (result.type === 'success') {
+      const resultURL = new URL(result.url);
+      const sessionSecret = resultURL.searchParams.get('session_secret');
+      if (!sessionSecret) {
+        throw new Error('session_secret is missing in auth redirect query');
+      }
+
+      setSessionSecret(sessionSecret);
+    }
+  };
 
   return (
     <View padding="medium">
-      <Heading color="secondary" size="small" type="InterSemiBold">
-        Session Secret
-      </Heading>
-      <TextInput
-        border="default"
-        rounded="large"
-        padding="small"
-        placeholder=" Session Secret"
-        onChangeText={setSecret}
-        style={{ marginVertical: spacing[4], backgroundColor: theme.background.default }}
-      />
-      <Button
-        label="Login"
-        disabled={!secret.trim()}
-        onPress={() => setSessionSecret(secret.trim())}
-      />
+      <Text color="secondary" type="InterMedium">
+        Log in or create an account to access your projects, download builds, and more.
+      </Text>
+
+      <View mt="5" style={{ gap: spacing['1.5'], alignItems: 'flex-start' }}>
+        <Button label="Log In" onPress={() => promptLogin('login')} />
+        <Button label="Sign Up" onPress={() => promptLogin('signup')} theme="tertiary" />
+      </View>
     </View>
   );
 };
