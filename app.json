@@ -48,7 +48,14 @@
       "policy": "sdkVersion"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-dev-client",
+        {
+          "launchModeExperimental": "launcher"
+        }
+      ],
+      "expo-router"
     ]
   }
 }
